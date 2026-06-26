@@ -8,34 +8,36 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { getCustomCoach, createCustomCoach } from "@/lib/coaching-personalities";
 
 const coaches = [
   {
     id: "coach-mo",
     emoji: "🔥",
-    name: "Coach Mo",
+    name: "Blaze",
     tagline: "Your hype crew in your ear",
     style: "Motivational",
     description:
-      "High energy, constant encouragement, and relentless positivity. Coach Mo cheers you through every kilometer with motivational cues, celebrates your milestones loudly, and will not let you quit when things get tough.",
+      "High energy, constant encouragement, and relentless positivity. Blaze cheers you through every kilometer with motivational cues, celebrates your milestones loudly, and will not let you quit.",
   },
   {
     id: "coach-data",
     emoji: "📊",
-    name: "Coach Data",
+    name: "Metric",
     tagline: "Precision-guided performance",
     style: "Analytical",
     description:
-      "Data-driven coaching focused on metrics, pacing strategy, and optimal splits. Coach Data gives you precise pace targets, heart rate zone guidance, and post-run analysis to systematically improve your performance.",
+      "Data-driven coaching focused on metrics, pacing strategy, and optimal splits. Metric gives you precise pace targets, efficiency analysis, and post-run breakdowns to systematically improve.",
   },
   {
     id: "sergeant-steel",
-    emoji: "💪",
-    name: "Sergeant Steel",
+    emoji: "⚔️",
+    name: "Commander",
     tagline: "No excuses. Just results.",
     style: "Drill Sergeant",
     description:
-      "Tough love, military discipline, and zero tolerance for slacking. Sergeant Steel pushes you past your comfort zone, calls out when you slow down, and demands your best performance every single time.",
+      "Tough love, military discipline, and zero tolerance for slacking. Commander pushes you past your comfort zone, calls out when you slow down, and demands your best every single time.",
   },
 ];
 
@@ -64,6 +66,18 @@ const intensityLabels: Record<string, string> = {
 export default function RunSetupPage() {
   const [selectedCoach, setSelectedCoach] = useState<string | null>(null);
   const [recovery, setRecovery] = useState<RecoveryData | null>(null);
+  const [showCustom, setShowCustom] = useState(false);
+  const [customName, setCustomName] = useState("");
+  const [customPrompt, setCustomPrompt] = useState("");
+  const [customCoach, setCustomCoach] = useState<{ name: string; prompt: string } | null>(null);
+
+  // Load existing custom coach from localStorage
+  useEffect(() => {
+    const saved = getCustomCoach();
+    if (saved) {
+      setCustomCoach({ name: saved.displayName, prompt: saved.systemPrompt });
+    }
+  }, []);
 
   useEffect(() => {
     fetch("/api/coaching/recovery")
@@ -179,6 +193,85 @@ export default function RunSetupPage() {
             </button>
           );
         })}
+
+        {/* Custom coach option */}
+        <button
+          onClick={() => {
+            if (customCoach) {
+              setSelectedCoach("custom");
+              setShowCustom(false);
+            } else {
+              setShowCustom(!showCustom);
+              setSelectedCoach(null);
+            }
+          }}
+          className={cn(
+            "w-full text-left rounded-2xl border-2 border-dashed p-5 transition-all cursor-pointer",
+            selectedCoach === "custom"
+              ? "bg-black text-white border-black"
+              : "bg-white border-gray-300 hover:border-gray-400"
+          )}
+        >
+          <div className="flex items-start gap-4">
+            <div className="text-4xl leading-none shrink-0">✨</div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
+                <h3 className={cn("font-black text-lg uppercase tracking-tight", selectedCoach === "custom" ? "text-white" : "text-black")}>
+                  {customCoach ? customCoach.name : "Create Your Own"}
+                </h3>
+                <span className={cn("text-xs font-medium px-2 py-0.5 rounded-full border", selectedCoach === "custom" ? "border-white/30 text-white/80" : "border-gray-300 text-gray-600")}>
+                  Custom
+                </span>
+              </div>
+              <p className={cn("text-sm", selectedCoach === "custom" ? "text-white/70" : "text-gray-500")}>
+                {customCoach ? "Your custom AI coach" : "Define your own coaching personality with a custom prompt"}
+              </p>
+            </div>
+          </div>
+        </button>
+
+        {/* Custom coach form */}
+        {showCustom && !customCoach && (
+          <div className="rounded-2xl border-2 border-gray-200 bg-gray-50 p-5 flex flex-col gap-4">
+            <div>
+              <label className="text-xs font-black uppercase tracking-widest text-black block mb-1.5">
+                Coach Name
+              </label>
+              <Input
+                value={customName}
+                onChange={(e) => setCustomName(e.target.value)}
+                placeholder="e.g., Zen, Spark, Captain..."
+                className="border-gray-300 focus:border-black"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-black uppercase tracking-widest text-black block mb-1.5">
+                Coaching Style Prompt
+              </label>
+              <textarea
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                placeholder="Describe how your coach should talk. e.g., 'Be calm and zen-like. Use mindfulness metaphors. Focus on breathing and form. Speak softly but firmly.'"
+                rows={4}
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none resize-none"
+              />
+            </div>
+            <Button
+              onClick={() => {
+                if (customName.trim() && customPrompt.trim()) {
+                  createCustomCoach(customName.trim(), customPrompt.trim());
+                  setCustomCoach({ name: customName.trim(), prompt: customPrompt.trim() });
+                  setSelectedCoach("custom");
+                  setShowCustom(false);
+                }
+              }}
+              disabled={!customName.trim() || !customPrompt.trim()}
+              className="bg-[#CFFF04] text-black font-black uppercase hover:bg-[#b8e004] disabled:bg-gray-200 disabled:text-gray-400"
+            >
+              Create Coach
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Start run button */}

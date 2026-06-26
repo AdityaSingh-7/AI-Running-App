@@ -6,6 +6,7 @@ export interface CoachPersonality {
   description: string;
   systemPrompt: string;
   voiceId: string;
+  isCustom?: boolean;
   feedbackStyle: {
     tone: string;
     encouragement: "high" | "medium" | "low";
@@ -18,11 +19,11 @@ export const COACHING_PERSONALITIES: CoachPersonality[] = [
   {
     id: "motivational",
     name: "motivational",
-    displayName: "Coach Mo",
-    avatar: "🌟",
+    displayName: "Blaze",
+    avatar: "🔥",
     description:
-      "Warm, encouraging, and celebratory. Coach Mo turns every run into a victory lap.",
-    systemPrompt: `You are Coach Mo, a warm and deeply encouraging running coach. Your core belief is that every runner is capable of greatness, and your job is to help them feel it.
+      "Warm, encouraging, and celebratory. Blaze turns every run into a victory lap.",
+    systemPrompt: `You are Blaze, a warm and deeply encouraging running coach. Your core belief is that every runner is capable of greatness, and your job is to help them feel it.
 
 Use "we" language — you are running this journey together. Say things like "we're doing amazing", "we've got this", and "look how far we've come."
 
@@ -46,11 +47,11 @@ Always use the runner's current stats in your response to make feedback feel per
   {
     id: "analytical",
     name: "analytical",
-    displayName: "Coach Data",
+    displayName: "Metric",
     avatar: "📊",
     description:
-      "Precise, data-driven, and strategic. Coach Data optimizes every split.",
-    systemPrompt: `You are Coach Data, an elite performance-focused running coach who speaks in numbers, splits, and systems. You treat running as a science and the runner as a high-performance athlete.
+      "Precise, data-driven, and strategic. Metric optimizes every split.",
+    systemPrompt: `You are Metric, an elite performance-focused running coach who speaks in numbers, splits, and systems. You treat running as a science and the runner as a high-performance athlete.
 
 Lead with data. Reference the runner's exact current stats — current pace, average pace, distance covered, elapsed time, and splits — in every coaching response.
 
@@ -76,11 +77,11 @@ Use the runner's current stats to make all analysis specific and actionable.`,
   {
     id: "drill_sergeant",
     name: "drill_sergeant",
-    displayName: "Sergeant Steel",
-    avatar: "🎖️",
+    displayName: "Commander",
+    avatar: "⚔️",
     description:
-      "Tough love, no excuses. Sergeant Steel pushes you past what you think is possible.",
-    systemPrompt: `You are Sergeant Steel, a no-nonsense, tough-love running coach with a military mindset. You believe the biggest obstacle between any runner and their goal is their own willingness to quit — and your job is to eliminate that option.
+      "Tough love, no excuses. Commander pushes you past what you think is possible.",
+    systemPrompt: `You are Commander, a no-nonsense, tough-love running coach with a military mindset. You believe the biggest obstacle between any runner and their goal is their own willingness to quit — and your job is to eliminate that option.
 
 Use military metaphors and commanding language. "Move it!", "Dig deep!", "Pain is temporary, quitting is forever." Treat every run as a mission that must be completed.
 
@@ -106,5 +107,56 @@ Always use the runner's current stats. Never let the runner feel comfortable —
 ];
 
 export function getPersonality(id: string): CoachPersonality | undefined {
-  return COACHING_PERSONALITIES.find((p) => p.id === id);
+  // Check built-in personalities first
+  const builtIn = COACHING_PERSONALITIES.find((p) => p.id === id);
+  if (builtIn) return builtIn;
+
+  // Check localStorage for custom coach
+  if (typeof window !== "undefined") {
+    const custom = localStorage.getItem("custom_coach");
+    if (custom) {
+      try {
+        const parsed = JSON.parse(custom) as CoachPersonality;
+        if (parsed.id === id) return parsed;
+      } catch {}
+    }
+  }
+
+  return undefined;
+}
+
+export function createCustomCoach(name: string, prompt: string): CoachPersonality {
+  const coach: CoachPersonality = {
+    id: "custom",
+    name: "custom",
+    displayName: name,
+    avatar: "✨",
+    description: "Your custom AI coach with a personalized coaching style.",
+    systemPrompt: `You are ${name}, a running coach. ${prompt}\n\nKeep every response under 15 seconds of speech (roughly 35–45 words). Always reference the runner's current stats (distance, pace, time) to make feedback specific and real.`,
+    voiceId: "alloy",
+    isCustom: true,
+    feedbackStyle: {
+      tone: "custom",
+      encouragement: "medium",
+      dataDriven: false,
+      pushIntensity: "moderate",
+    },
+  };
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem("custom_coach", JSON.stringify(coach));
+  }
+
+  return coach;
+}
+
+export function getCustomCoach(): CoachPersonality | null {
+  if (typeof window === "undefined") return null;
+  const stored = localStorage.getItem("custom_coach");
+  if (!stored) return null;
+  try {
+    return JSON.parse(stored) as CoachPersonality;
+  } catch {
+    return null;
+  }
 }
