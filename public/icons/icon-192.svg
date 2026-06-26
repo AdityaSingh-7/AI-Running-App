@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <rect width="192" height="192" fill="#000000" rx="32"/>
+  <!-- Running figure silhouette -->
+  <circle cx="118" cy="42" r="14" fill="#CFFF04"/>
+  <!-- Body -->
+  <path d="M118 56 L108 90 L90 118 L76 138" stroke="#CFFF04" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <!-- Arms -->
+  <path d="M112 72 L88 62 M108 80 L128 68" stroke="#CFFF04" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <!-- Legs -->
+  <path d="M108 90 L92 114 L80 132" stroke="#CFFF04" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M108 90 L126 110 L138 130" stroke="#CFFF04" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <!-- RC text -->
+  <text x="20" y="175" font-family="Arial Black, sans-serif" font-weight="900" font-size="22" fill="#CFFF04" letter-spacing="1">RC</text>
+</svg>
