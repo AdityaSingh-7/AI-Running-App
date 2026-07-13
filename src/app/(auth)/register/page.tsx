@@ -1,17 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 
 async function registerAction(formData: FormData) {
   "use server";
@@ -36,124 +27,169 @@ async function registerAction(formData: FormData) {
 
 export default function RegisterPage() {
   return (
-    <div className="w-full max-w-sm">
-      {/* Logo */}
-      <div className="text-center mb-8">
-        <Link href="/" className="inline-flex items-center gap-2">
-          <span className="text-black font-black tracking-widest text-lg uppercase">
-            RunCoach
-          </span>
-        </Link>
-      </div>
-
-      <div className="bg-white border border-[#e5e5e5] p-8">
-        <div className="mb-6">
-          <h1 className="text-black font-black uppercase text-xl tracking-tight">
-            Create account
-          </h1>
-          <p className="text-gray-500 text-sm mt-1">
-            Start your AI-powered training journey today
+    <div
+      className="min-h-screen flex items-center justify-center px-4 py-12"
+      style={{ background: "#FDF8F4" }}
+    >
+      <div className="w-full max-w-sm">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center gap-2">
+            <span className="font-bold text-xl" style={{ color: "#2E363B" }}>
+              RunCoach
+            </span>
+          </Link>
+          <p className="text-sm mt-1" style={{ color: "#6B7680" }}>
+            Your journey starts here
           </p>
         </div>
 
-        <form action={registerAction} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
-            <Label
-              htmlFor="name"
-              className="text-xs font-bold uppercase tracking-widest text-black"
-            >
-              Full Name
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              type="text"
-              placeholder="Alex Johnson"
-              required
-              autoComplete="name"
-              className="h-10 border-[#e5e5e5] focus:border-black focus:ring-0 rounded-none text-black placeholder:text-gray-400"
-            />
+        <div
+          className="rounded-2xl p-8"
+          style={{
+            background: "#FFFFFF",
+            boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
+            border: "1px solid #F0EDEB",
+          }}
+        >
+          <div className="mb-6">
+            <h1 className="font-bold text-xl" style={{ color: "#2E363B" }}>
+              Create account
+            </h1>
+            <p className="text-sm mt-1" style={{ color: "#6B7680" }}>
+              Start your AI-powered training journey today
+            </p>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label
-              htmlFor="email"
-              className="text-xs font-bold uppercase tracking-widest text-black"
+          <form action={registerAction} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1.5">
+              <Label
+                htmlFor="name"
+                className="text-xs font-semibold"
+                style={{ color: "#2E363B" }}
+              >
+                Full Name
+              </Label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Alex Johnson"
+                required
+                autoComplete="name"
+                className="h-11 rounded-xl text-sm"
+                style={{
+                  border: "1.5px solid #F0EDEB",
+                  background: "#F5F2EF",
+                  color: "#2E363B",
+                }}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label
+                htmlFor="email"
+                className="text-xs font-semibold"
+                style={{ color: "#2E363B" }}
+              >
+                Email
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                required
+                autoComplete="email"
+                className="h-11 rounded-xl text-sm"
+                style={{
+                  border: "1.5px solid #F0EDEB",
+                  background: "#F5F2EF",
+                  color: "#2E363B",
+                }}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label
+                htmlFor="password"
+                className="text-xs font-semibold"
+                style={{ color: "#2E363B" }}
+              >
+                Password
+              </Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="At least 8 characters"
+                required
+                autoComplete="new-password"
+                minLength={8}
+                className="h-11 rounded-xl text-sm"
+                style={{
+                  border: "1.5px solid #F0EDEB",
+                  background: "#F5F2EF",
+                  color: "#2E363B",
+                }}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label
+                htmlFor="confirmPassword"
+                className="text-xs font-semibold"
+                style={{ color: "#2E363B" }}
+              >
+                Confirm Password
+              </Label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                placeholder="••••••••"
+                required
+                autoComplete="new-password"
+                className="h-11 rounded-xl text-sm"
+                style={{
+                  border: "1.5px solid #F0EDEB",
+                  background: "#F5F2EF",
+                  color: "#2E363B",
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full h-12 font-semibold text-white text-sm transition-colors mt-1 rounded-full"
+              style={{ background: "#C15F3C" }}
             >
-              Email
-            </Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="you@example.com"
-              required
-              autoComplete="email"
-              className="h-10 border-[#e5e5e5] focus:border-black focus:ring-0 rounded-none text-black placeholder:text-gray-400"
-            />
-          </div>
+              Create Account
+            </button>
 
-          <div className="flex flex-col gap-1.5">
-            <Label
-              htmlFor="password"
-              className="text-xs font-bold uppercase tracking-widest text-black"
+            <p className="text-xs text-center" style={{ color: "#6B7680" }}>
+              By creating an account you agree to our{" "}
+              <Link
+                href="/terms"
+                className="font-medium hover:underline"
+                style={{ color: "#C15F3C" }}
+              >
+                Terms of Service
+              </Link>
+              .
+            </p>
+          </form>
+
+          <div className="mt-6 text-center text-sm" style={{ color: "#6B7680" }}>
+            Already have an account?&nbsp;
+            <Link
+              href="/login"
+              className="font-semibold hover:underline"
+              style={{ color: "#C15F3C" }}
             >
-              Password
-            </Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="At least 8 characters"
-              required
-              autoComplete="new-password"
-              minLength={8}
-              className="h-10 border-[#e5e5e5] focus:border-black focus:ring-0 rounded-none text-black placeholder:text-gray-400"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <Label
-              htmlFor="confirmPassword"
-              className="text-xs font-bold uppercase tracking-widest text-black"
-            >
-              Confirm Password
-            </Label>
-            <Input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              placeholder="••••••••"
-              required
-              autoComplete="new-password"
-              className="h-10 border-[#e5e5e5] focus:border-black focus:ring-0 rounded-none text-black placeholder:text-gray-400"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full h-10 mt-1 bg-[#CFFF04] hover:bg-[#d9ff2e] text-black font-black text-sm tracking-widest uppercase transition-colors"
-          >
-            Create Account
-          </button>
-
-          <p className="text-xs text-center text-gray-400">
-            By creating an account you agree to our{" "}
-            <Link href="/terms" className="text-black underline hover:no-underline">
-              Terms of Service
+              Sign in
             </Link>
-            .
-          </p>
-        </form>
-
-        <div className="mt-6 text-center text-sm text-gray-500">
-          Already have an account?&nbsp;
-          <Link
-            href="/login"
-            className="text-black font-bold underline hover:no-underline"
-          >
-            Sign in
-          </Link>
+          </div>
         </div>
       </div>
     </div>

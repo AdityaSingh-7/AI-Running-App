@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useCallback, Suspense, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { Play, Pause, Square } from "lucide-react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Play, Pause, Square, X } from "lucide-react";
 import type { WeatherData } from "@/lib/weather";
-import { Button } from "@/components/ui/button";
 import { useRunSession } from "@/hooks/useRunSession";
 import { useWakeLock } from "@/hooks/useWakeLock";
 import { formatPace, formatDistance, formatDuration } from "@/lib/geo";
@@ -22,6 +21,7 @@ const GPS_FLUSH_INTERVAL_MS = 10_000;
 
 function ActiveRunInner() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const coachId = searchParams.get("coach") ?? "coach-mo";
   const personality = COACH_PERSONALITY_MAP[coachId] ?? "motivational";
   const simulate = searchParams.get("simulate") === "true";
@@ -158,139 +158,177 @@ function ActiveRunInner() {
   const mapPositions = positions as { latitude: number; longitude: number }[];
 
   return (
-    <div className="fixed inset-0 text-white flex flex-col overflow-hidden" style={{ backgroundColor: "#000000" }}>
-      {/* Map — fills all remaining space */}
-      <div className="flex-1 relative">
+    <div
+      className="fixed inset-0 flex flex-col overflow-hidden"
+      style={{ backgroundColor: "#E8F0EC" }}
+    >
+      {/* Top bar */}
+      <div className="flex items-center justify-between px-4 pt-4 pb-2 shrink-0">
+        <button
+          onClick={() => router.back()}
+          className="size-10 rounded-full bg-white shadow-md flex items-center justify-center"
+          aria-label="Go back"
+        >
+          <X className="size-5 text-[#2E363B]" />
+        </button>
+        <span className="text-xs font-semibold uppercase tracking-widest text-[#6B7680]">
+          Tracking
+        </span>
+        {/* Simulation badge */}
+        {simulate ? (
+          <div
+            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold"
+            style={{ backgroundColor: "#FEF0E6", color: "#C15F3C" }}
+          >
+            <span className="inline-block size-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#C15F3C" }} />
+            Sim
+          </div>
+        ) : (
+          <div className="size-10" aria-hidden />
+        )}
+      </div>
+
+      {/* Map area */}
+      <div className="mx-4 rounded-2xl overflow-hidden shrink-0" style={{ height: 220, backgroundColor: "#B8CFC4" }}>
         <RunMap
           positions={mapPositions}
           isLive={status === "active" || status === "paused"}
-          className="absolute inset-0 rounded-none"
+          className="w-full h-full"
         />
+      </div>
 
-        {/* VoiceCoach overlay — top of map */}
-        <div className="absolute top-4 left-4 right-4 z-10">
-          {simulate && (
-            <div className="mb-2 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-widest" style={{ backgroundColor: "#CFFF04", color: "#000000" }}>
-              <span className="inline-block size-2 rounded-full bg-black/40 animate-pulse" />
-              Simulation
-            </div>
-          )}
-          <VoiceCoach
-            personality={personality}
-            isActive={status === "active"}
-            stats={{
-              distanceMeters: stats.distanceMeters,
-              elapsedSeconds: elapsedSeconds,
-              currentPaceSecsPerKm: stats.currentPaceSecsPerKm,
-              avgPaceSecsPerKm: stats.avgPaceSecsPerKm,
-              splitCount: Math.floor(stats.distanceMeters / 1000),
-              lastSplitPace: null,
+      {/* VoiceCoach — sits below map */}
+      <div className="px-4 pt-2 shrink-0">
+        <VoiceCoach
+          personality={personality}
+          isActive={status === "active"}
+          stats={{
+            distanceMeters: stats.distanceMeters,
+            elapsedSeconds: elapsedSeconds,
+            currentPaceSecsPerKm: stats.currentPaceSecsPerKm,
+            avgPaceSecsPerKm: stats.avgPaceSecsPerKm,
+            splitCount: Math.floor(stats.distanceMeters / 1000),
+            lastSplitPace: null,
+          }}
+          distanceUnit="km"
+          weather={weather}
+        />
+      </div>
+
+      {/* Metrics section */}
+      <div className="flex-1 flex flex-col justify-center px-4 py-2">
+        {/* Timer */}
+        <div className="text-center mb-5">
+          <p
+            className="tabular-nums leading-none"
+            style={{
+              fontWeight: 900,
+              fontSize: 80,
+              color: "#2E363B",
+              letterSpacing: "-2px",
             }}
-            distanceUnit="km"
-            weather={weather}
-          />
+          >
+            {formatDuration(elapsedSeconds)}
+          </p>
+          <p className="text-xs uppercase tracking-widest mt-1" style={{ color: "#6B7680" }}>
+            Elapsed Time
+          </p>
         </div>
 
-        {/* Floating metrics overlay */}
-        <div className="absolute bottom-4 left-4 right-4">
-          <div className="rounded-2xl p-5 border border-white/10" style={{ backgroundColor: "rgba(0,0,0,0.80)", backdropFilter: "blur(12px)" }}>
-            {/* Timer */}
-            <div className="text-center mb-4">
-              <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">
-                Duration
-              </p>
-              <p className="text-6xl font-mono font-bold text-white tabular-nums tracking-tight">
-                {formatDuration(elapsedSeconds)}
-              </p>
-            </div>
+        {/* Stats grid */}
+        <div className="grid grid-cols-2 gap-3">
+          {/* Distance */}
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <p
+              className="tabular-nums font-extrabold leading-tight"
+              style={{ fontSize: 28, color: "#C15F3C" }}
+            >
+              {formatDistance(stats.distanceMeters, "km")}
+            </p>
+            <p className="text-xs uppercase tracking-wide mt-1" style={{ color: "#6B7680" }}>
+              Distance
+            </p>
+          </div>
 
-            {/* Distance + Pace */}
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div>
-                <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">
-                  Distance
-                </p>
-                <p className="text-2xl font-bold text-white tabular-nums">
-                  {formatDistance(stats.distanceMeters, "km")}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">
-                  Pace
-                </p>
-                <p className="text-2xl font-bold text-white tabular-nums">
-                  {formatPace(stats.currentPaceSecsPerKm)}
-                  <span className="text-sm font-normal text-gray-500 ml-1">
-                    /km
-                  </span>
-                </p>
-              </div>
-            </div>
+          {/* Pace */}
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <p
+              className="tabular-nums font-extrabold leading-tight"
+              style={{ fontSize: 28, color: "#2E363B" }}
+            >
+              {formatPace(stats.currentPaceSecsPerKm)}
+              <span className="text-sm font-normal ml-1" style={{ color: "#6B7680" }}>
+                /km
+              </span>
+            </p>
+            <p className="text-xs uppercase tracking-wide mt-1" style={{ color: "#6B7680" }}>
+              Pace
+            </p>
           </div>
         </div>
       </div>
 
       {/* Control buttons */}
-      <div className="px-6 py-5" style={{ backgroundColor: "#000000" }}>
+      <div className="px-4 pb-8 shrink-0">
         {status === "idle" && (
-          <Button
+          <button
             onClick={handleStart}
-            className="w-full font-black uppercase text-lg tracking-wide text-black rounded-full hover:opacity-90 transition-opacity"
-            style={{ minHeight: 56, backgroundColor: "#CFFF04", color: "#000000" }}
+            className="w-full font-bold text-lg text-white rounded-full flex items-center justify-center gap-2 shadow-md transition-opacity hover:opacity-90"
+            style={{ height: 72, backgroundColor: "#C15F3C" }}
           >
-            <Play className="size-6 fill-current mr-2" />
+            <Play className="size-6 fill-current" />
             Start Run
-          </Button>
+          </button>
         )}
 
         {status === "active" && (
-          <div className="flex gap-3">
-            <Button
+          <div className="flex gap-3 items-center">
+            <button
               onClick={handlePause}
-              className="flex-1 font-bold text-base rounded-full border-2"
-              style={{ minHeight: 56, borderColor: "#ffffff", color: "#ffffff", backgroundColor: "transparent" }}
+              className="flex-1 font-bold text-base rounded-full border flex items-center justify-center gap-2 transition-colors"
+              style={{ height: 56, borderWidth: 1.5, borderColor: "#2E363B", color: "#2E363B", backgroundColor: "transparent" }}
             >
-              <Pause className="size-5 fill-current mr-2" />
+              <Pause className="size-5 fill-current" />
               Pause
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={handleStop}
-              className="flex-1 text-white font-bold text-base rounded-full hover:opacity-90 transition-opacity"
-              style={{ minHeight: 56, backgroundColor: "#FF3B30" }}
+              className="shrink-0 rounded-full flex items-center justify-center shadow-md transition-opacity hover:opacity-90"
+              style={{ width: 56, height: 56, backgroundColor: "#C15F3C" }}
+              aria-label="Stop run"
             >
-              <Square className="size-5 fill-current mr-2" />
-              Stop
-            </Button>
+              <Square className="size-5 fill-white text-white" />
+            </button>
           </div>
         )}
 
         {status === "paused" && (
-          <div className="flex gap-3">
-            <Button
+          <div className="flex gap-3 items-center">
+            <button
               onClick={handleResume}
-              className="flex-1 font-black uppercase text-base tracking-wide text-black rounded-full hover:opacity-90 transition-opacity"
-              style={{ minHeight: 56, backgroundColor: "#CFFF04", color: "#000000" }}
+              className="flex-1 font-bold text-base rounded-full border flex items-center justify-center gap-2 transition-colors"
+              style={{ height: 56, borderWidth: 1.5, borderColor: "#2E363B", color: "#2E363B", backgroundColor: "transparent" }}
             >
-              <Play className="size-5 fill-current mr-2" />
+              <Play className="size-5 fill-current" />
               Resume
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={handleStop}
-              className="flex-1 text-white font-bold text-base rounded-full hover:opacity-90 transition-opacity"
-              style={{ minHeight: 56, backgroundColor: "#FF3B30" }}
+              className="shrink-0 rounded-full flex items-center justify-center shadow-md transition-opacity hover:opacity-90"
+              style={{ width: 56, height: 56, backgroundColor: "#C15F3C" }}
+              aria-label="Finish run"
             >
-              <Square className="size-5 fill-current mr-2" />
-              Finish
-            </Button>
+              <Square className="size-5 fill-white text-white" />
+            </button>
           </div>
         )}
 
         {status === "completed" && (
-          <div className="text-center py-2">
-            <p className="font-bold text-white text-lg mb-1 uppercase tracking-wide">Run Complete</p>
-            <p className="text-sm text-gray-400">
+          <div className="text-center py-3">
+            <p className="font-bold text-[#2E363B] text-lg mb-1">Run Complete</p>
+            <p className="text-sm text-[#6B7680]">
               {formatDuration(elapsedSeconds)} &middot;{" "}
-              <span style={{ color: "#CFFF04" }} className="font-bold">
+              <span className="font-bold" style={{ color: "#C15F3C" }}>
                 {formatDistance(stats.distanceMeters, "km")}
               </span>
             </p>
@@ -305,8 +343,11 @@ export default function ActiveRunPage() {
   return (
     <Suspense
       fallback={
-        <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: "#000000" }}>
-          <p className="text-gray-500 text-sm">Loading…</p>
+        <div
+          className="fixed inset-0 flex items-center justify-center"
+          style={{ backgroundColor: "#E8F0EC" }}
+        >
+          <p className="text-[#6B7680] text-sm">Loading…</p>
         </div>
       }
     >

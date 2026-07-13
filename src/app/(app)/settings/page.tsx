@@ -1,22 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 const coaches = [
-  { id: "coach-mo", emoji: "🔥", name: "Coach Mo", description: "Motivational" },
-  { id: "coach-data", emoji: "📊", name: "Coach Data", description: "Analytical" },
-  { id: "sergeant-steel", emoji: "💪", name: "Sergeant Steel", description: "Drill Sergeant" },
+  { id: "coach-mo", icon: "🔥", name: "Blaze", description: "Motivational", color: "#E85D2B", bgColor: "#FEF0E6" },
+  { id: "coach-data", icon: "◎", name: "Metric", description: "Analytical", color: "#2E7D6F", bgColor: "#E8F5F0" },
+  { id: "sergeant-steel", icon: "⬆", name: "Commander", description: "Drill Sergeant", color: "#4A4A4A", bgColor: "#F0F0F0" },
+];
+
+const PERSONAL_BESTS = [
+  { label: "5K", value: "24:32" },
+  { label: "10K", value: "51:14" },
+  { label: "Best Pace", value: "4:48/km" },
 ];
 
 export default function SettingsPage() {
@@ -55,151 +53,186 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 max-w-xl">
+    <div className="flex flex-col gap-6 max-w-xl pb-12" style={{ backgroundColor: "#FAF7F4", minHeight: "100%" }}>
+
+      {/* Profile header */}
+      <div className="flex flex-col items-center pt-4 pb-2 gap-3">
+        <div
+          className="size-16 rounded-full flex items-center justify-center text-xl font-bold text-white shadow-sm"
+          style={{ backgroundColor: "#C15F3C" }}
+        >
+          YO
+        </div>
+        <div className="text-center">
+          <p className="font-bold text-[#2E363B] text-lg">Your Profile</p>
+          <p className="text-xs text-[#6B7680] mt-0.5">Member since 2023</p>
+        </div>
+      </div>
+
+      {/* Personal Bests */}
       <div>
-        <h1 className="text-2xl font-black text-black uppercase tracking-tight">Settings</h1>
-        <p className="text-gray-500 mt-1">
-          Customize your RunCoach AI experience
+        <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7680] mb-3">
+          Personal Bests
         </p>
+        <div className="grid grid-cols-3 gap-3">
+          {PERSONAL_BESTS.map((pb) => (
+            <div key={pb.label} className="bg-white rounded-2xl p-4 shadow-sm text-center">
+              <p className="font-bold text-sm" style={{ color: "#C15F3C" }}>
+                {pb.value}
+              </p>
+              <p className="text-xs uppercase tracking-wide mt-1" style={{ color: "#6B7680" }}>
+                {pb.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Settings list */}
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7680] mb-3">
+          Settings
+        </p>
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+          {/* Units row */}
+          <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
+            <div>
+              <p className="text-sm font-medium text-[#2E363B]">Units</p>
+              <p className="text-xs text-[#6B7680] mt-0.5">{distanceUnit === "km" ? "Kilometers" : "Miles"}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="inline-flex rounded-full border border-gray-200 overflow-hidden">
+                {(["km", "miles"] as const).map((unit) => (
+                  <button
+                    key={unit}
+                    onClick={() => setDistanceUnit(unit)}
+                    className={cn(
+                      "px-3 py-1 text-xs font-medium transition-colors",
+                      distanceUnit === unit
+                        ? "text-white"
+                        : "bg-white text-[#6B7680]"
+                    )}
+                    style={distanceUnit === unit ? { backgroundColor: "#C15F3C" } : {}}
+                  >
+                    {unit}
+                  </button>
+                ))}
+              </div>
+              <ChevronRight className="size-4 text-[#6B7680]" />
+            </div>
+          </div>
+
+          {/* Notifications row */}
+          <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
+            <div>
+              <p className="text-sm font-medium text-[#2E363B]">Notifications</p>
+              <p className="text-xs text-[#6B7680] mt-0.5">Run reminders &amp; milestones</p>
+            </div>
+            <ChevronRight className="size-4 text-[#6B7680]" />
+          </div>
+
+          {/* Connected Apps row */}
+          <div className="flex items-center justify-between px-4 py-4">
+            <div>
+              <p className="text-sm font-medium text-[#2E363B]">Connected Apps</p>
+              <p className="text-xs text-[#6B7680] mt-0.5">Sync with health &amp; fitness apps</p>
+            </div>
+            <ChevronRight className="size-4 text-[#6B7680]" />
+          </div>
+        </div>
+      </div>
+
+      {/* Voice Coaching toggle */}
+      <div className="bg-white rounded-2xl shadow-sm px-4 py-4 flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium text-[#2E363B]">Voice Coaching</p>
+          <p className="text-xs text-[#6B7680] mt-0.5">
+            {voiceEnabled ? "Your coach speaks during runs" : "Voice feedback is disabled"}
+          </p>
+        </div>
+        <button
+          role="switch"
+          aria-checked={voiceEnabled}
+          onClick={() => setVoiceEnabled((v) => !v)}
+          className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none"
+          style={{ backgroundColor: voiceEnabled ? "#C15F3C" : "#D1D5DB" }}
+        >
+          <span
+            className={cn(
+              "pointer-events-none inline-block size-5 transform rounded-full bg-white shadow ring-0 transition duration-200",
+              voiceEnabled ? "translate-x-5" : "translate-x-0"
+            )}
+          />
+        </button>
       </div>
 
       {/* Preferred Coach */}
-      <Card className="bg-white border border-gray-200">
-        <CardHeader>
-          <CardTitle className="font-black uppercase tracking-tight text-black">Preferred Coach</CardTitle>
-          <CardDescription>
-            Your default coaching style for new runs
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-2">
-          {coaches.map((coach) => (
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7680] mb-3">
+          Preferred Coach
+        </p>
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+          {coaches.map((coach, i) => (
             <button
               key={coach.id}
               onClick={() => setSelectedCoach(coach.id)}
               className={cn(
-                "flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all w-full",
-                selectedCoach === coach.id
-                  ? "border-black bg-black"
-                  : "border-gray-200 hover:border-gray-400 bg-white"
+                "flex items-center gap-3 px-4 py-3 text-left transition-colors w-full",
+                i < coaches.length - 1 ? "border-b border-gray-100" : "",
+                selectedCoach === coach.id ? "" : "bg-white hover:bg-gray-50"
               )}
+              style={selectedCoach === coach.id ? { backgroundColor: coach.bgColor } : {}}
             >
-              <span className="text-2xl">{coach.emoji}</span>
-              <div>
-                <p
-                  className={cn(
-                    "font-semibold text-sm",
-                    selectedCoach === coach.id
-                      ? "text-white"
-                      : "text-black"
-                  )}
-                >
+              <div
+                className="size-9 rounded-lg flex items-center justify-center text-sm font-bold"
+                style={{
+                  backgroundColor: selectedCoach === coach.id ? coach.color : coach.bgColor,
+                  color: selectedCoach === coach.id ? "#FFFFFF" : coach.color,
+                }}
+              >
+                {coach.icon}
+              </div>
+              <div className="flex-1">
+                <p className={cn("text-sm font-medium", selectedCoach === coach.id ? "" : "text-[#2E363B]")} style={selectedCoach === coach.id ? { color: coach.color } : {}}>
                   {coach.name}
                 </p>
-                <p className={cn("text-xs", selectedCoach === coach.id ? "text-white/70" : "text-muted-foreground")}>
-                  {coach.description}
-                </p>
+                <p className="text-xs text-[#6B7680]">{coach.description}</p>
               </div>
               {selectedCoach === coach.id && (
-                <span className="ml-auto text-white font-bold text-sm">✓</span>
+                <span className="text-xs font-bold" style={{ color: coach.color }}>✓</span>
               )}
             </button>
           ))}
-        </CardContent>
-      </Card>
-
-      {/* Distance Unit */}
-      <Card className="bg-white border border-gray-200">
-        <CardHeader>
-          <CardTitle className="font-black uppercase tracking-tight text-black">Distance Unit</CardTitle>
-          <CardDescription>
-            Units used for distance and pace displays
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="inline-flex rounded-xl border border-gray-200 overflow-hidden">
-            {(["km", "miles"] as const).map((unit) => (
-              <button
-                key={unit}
-                onClick={() => setDistanceUnit(unit)}
-                className={cn(
-                  "px-6 py-2.5 text-sm font-medium transition-colors",
-                  distanceUnit === unit
-                    ? "bg-black text-white"
-                    : "bg-white text-gray-600 hover:bg-gray-50"
-                )}
-              >
-                {unit === "km" ? "Kilometers (km)" : "Miles (mi)"}
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Voice Coaching */}
-      <Card className="bg-white border border-gray-200">
-        <CardHeader>
-          <CardTitle className="font-black uppercase tracking-tight text-black">Voice Coaching</CardTitle>
-          <CardDescription>
-            Enable or disable real-time voice cues during runs
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-black">Voice Coaching</p>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                {voiceEnabled
-                  ? "Your coach will speak to you during runs"
-                  : "Voice feedback is disabled"}
-              </p>
-            </div>
-            {/* Toggle */}
-            <button
-              role="switch"
-              aria-checked={voiceEnabled}
-              onClick={() => setVoiceEnabled((v) => !v)}
-              className={cn(
-                "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2",
-                voiceEnabled ? "bg-black" : "bg-gray-200"
-              )}
-            >
-              <span
-                className={cn(
-                  "pointer-events-none inline-block size-5 transform rounded-full bg-white shadow ring-0 transition duration-200",
-                  voiceEnabled ? "translate-x-5" : "translate-x-0"
-                )}
-              />
-            </button>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Running Goal */}
-      <Card className="bg-white border border-gray-200">
-        <CardHeader>
-          <CardTitle className="font-black uppercase tracking-tight text-black">Running Goal</CardTitle>
-          <CardDescription>
-            Set a goal and get an AI-generated 4-week training plan tailored to your recent runs
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7680] mb-3">
+          Running Goal
+        </p>
+        <div className="bg-white rounded-2xl shadow-sm p-4 flex flex-col gap-4">
+          <p className="text-xs text-[#6B7680] leading-relaxed">
+            Set a goal and get an AI-generated 4-week training plan tailored to your recent runs.
+          </p>
           <div className="flex gap-2">
             <Input
               value={goal}
               onChange={(e) => setGoal(e.target.value)}
               placeholder="e.g. Sub-25 minute 5K, Run a half marathon"
-              className="flex-1 border-gray-200 focus-visible:ring-black"
+              className="flex-1 border-gray-200 rounded-xl text-sm"
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleGeneratePlan();
               }}
             />
-            <Button
+            <button
               onClick={handleGeneratePlan}
               disabled={goalLoading || !goal.trim()}
-              className="h-10 px-5 bg-[#CFFF04] text-black font-black uppercase hover:bg-[#b8e004] border-0 disabled:bg-gray-200 disabled:text-gray-400 shrink-0"
+              className="h-10 px-4 rounded-full font-semibold text-sm text-white shrink-0 transition-all disabled:opacity-40"
+              style={{ backgroundColor: "#C15F3C" }}
             >
-              {goalLoading ? "Generating..." : "Generate Plan"}
-            </Button>
+              {goalLoading ? "..." : "Generate"}
+            </button>
           </div>
 
           {goalError && (
@@ -207,32 +240,33 @@ export default function SettingsPage() {
           )}
 
           {goalLoading && (
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <span className="inline-block w-4 h-4 border-2 border-gray-300 border-t-black rounded-full animate-spin" />
+            <div className="flex items-center gap-2 text-sm text-[#6B7680]">
+              <span className="inline-block w-4 h-4 border-2 border-gray-300 rounded-full animate-spin" style={{ borderTopColor: "#C15F3C" }} />
               Building your 4-week plan...
             </div>
           )}
 
           {goalPlan && !goalLoading && (
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-              <p className="text-xs font-black uppercase tracking-tight text-gray-400 mb-3">
+            <div className="rounded-xl border border-gray-100 p-4" style={{ backgroundColor: "#FAF7F4" }}>
+              <p className="text-xs font-semibold uppercase tracking-wide text-[#6B7680] mb-3">
                 4-Week Plan for: {goal}
               </p>
-              <div className="prose prose-sm max-w-none text-gray-800 text-sm leading-relaxed whitespace-pre-wrap">
+              <div className="prose prose-sm max-w-none text-[#2E363B] text-sm leading-relaxed whitespace-pre-wrap">
                 {goalPlan}
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Separator />
-
-      {/* Save */}
-      <div className="flex justify-end">
-        <Button className="h-10 px-6 bg-black text-white font-black uppercase hover:bg-gray-800 border-0">
-          Save Settings
-        </Button>
+      {/* Sign Out */}
+      <div className="pt-2">
+        <button
+          className="w-full h-12 rounded-full font-semibold text-sm border transition-colors"
+          style={{ borderWidth: 1.5, borderColor: "#2E363B", color: "#2E363B", backgroundColor: "transparent" }}
+        >
+          Sign Out
+        </button>
       </div>
     </div>
   );

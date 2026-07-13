@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 // ─── Coach data (mirrors /run/page.tsx) ───────────────────────────────────────
 
@@ -56,14 +55,17 @@ function StepDots({ current }: { current: number }) {
       {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
         <span
           key={i}
-          className={cn(
-            "rounded-full transition-all",
-            i === current
-              ? "w-6 h-2 bg-[#CFFF04]"
-              : i < current
-              ? "w-2 h-2 bg-foreground/40"
-              : "w-2 h-2 bg-foreground/15"
-          )}
+          className="rounded-full transition-all"
+          style={{
+            width: i === current ? 24 : 8,
+            height: 8,
+            backgroundColor:
+              i === current
+                ? "#C15F3C"
+                : i < current
+                ? "#2E363B"
+                : "#D1D5DB",
+          }}
         />
       ))}
     </div>
@@ -86,13 +88,13 @@ function StepGoal({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="text-xs font-black uppercase tracking-widest text-[#CFFF04] mb-3">
+        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#C15F3C" }}>
           Step 1 of 4
         </p>
-        <h1 className="text-4xl sm:text-5xl font-black text-foreground uppercase tracking-tight leading-none mb-3">
-          WHAT&apos;S YOUR GOAL?
+        <h1 className="text-3xl font-bold text-[#2E363B] leading-tight mb-2" style={{ fontFamily: "Georgia, serif" }}>
+          What&apos;s your goal?
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-sm text-[#6B7680]">
           Pick the goal that drives you. You can change this anytime.
         </p>
       </div>
@@ -103,10 +105,10 @@ function StepGoal({
             key={opt.id}
             onClick={() => onGoal(opt.id)}
             className={cn(
-              "w-full text-left rounded-2xl border-2 px-5 py-4 text-lg font-black uppercase tracking-tight transition-all",
+              "w-full text-left rounded-2xl border-2 px-5 py-4 text-base font-semibold transition-all",
               goal === opt.id
-                ? "bg-[#CFFF04] text-black border-[#CFFF04]"
-                : "bg-background text-foreground border-border hover:border-foreground"
+                ? "border-[#C15F3C] text-[#C15F3C] bg-[#FEF0E6]"
+                : "border-gray-200 text-[#2E363B] bg-white hover:border-[#C15F3C]/40"
             )}
           >
             {opt.label}
@@ -116,7 +118,7 @@ function StepGoal({
 
       {/* Custom goal */}
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">
+        <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7680] mb-2">
           Or enter your own
         </p>
         <input
@@ -128,10 +130,10 @@ function StepGoal({
           }}
           placeholder="e.g. Run my first marathon"
           className={cn(
-            "w-full rounded-xl border-2 bg-background text-foreground px-4 py-3 text-sm font-medium placeholder:text-muted-foreground/50 outline-none transition-all",
+            "w-full rounded-xl border-2 bg-white text-[#2E363B] px-4 py-3 text-sm font-medium placeholder:text-[#6B7680]/50 outline-none transition-all",
             goal === "custom"
-              ? "border-[#CFFF04]"
-              : "border-border focus:border-foreground"
+              ? "border-[#C15F3C]"
+              : "border-gray-200 focus:border-[#C15F3C]/60"
           )}
         />
       </div>
@@ -151,13 +153,13 @@ function StepCoach({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="text-xs font-black uppercase tracking-widest text-[#CFFF04] mb-3">
+        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#C15F3C" }}>
           Step 2 of 4
         </p>
-        <h1 className="text-4xl sm:text-5xl font-black text-foreground uppercase tracking-tight leading-none mb-3">
-          PICK YOUR COACH
+        <h1 className="text-3xl font-bold text-[#2E363B] leading-tight mb-2" style={{ fontFamily: "Georgia, serif" }}>
+          Pick your coach
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-sm text-[#6B7680]">
           Your default coach for every run. Switch it up before any session.
         </p>
       </div>
@@ -170,56 +172,35 @@ function StepCoach({
               key={coach.id}
               onClick={() => onCoach(coach.id)}
               className={cn(
-                "w-full text-left rounded-2xl border-2 p-5 transition-all",
+                "w-full text-left rounded-2xl border p-5 transition-all bg-white shadow-sm",
                 isSelected
-                  ? "bg-foreground text-background border-foreground"
-                  : "bg-background text-foreground border-border hover:border-foreground"
+                  ? "border-[#C15F3C] ring-1 ring-[#C15F3C]"
+                  : "border-gray-200 hover:border-[#C15F3C]/40"
               )}
+              style={isSelected ? { borderLeftWidth: 4, borderLeftColor: "#C15F3C" } : {}}
             >
               <div className="flex items-start gap-4">
-                <div className="text-4xl leading-none shrink-0">
+                <div className="text-3xl leading-none shrink-0 mt-0.5">
                   {coach.emoji}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <h3
-                      className={cn(
-                        "font-black text-lg uppercase tracking-tight",
-                        isSelected ? "text-background" : "text-foreground"
-                      )}
-                    >
+                    <h3 className="font-bold text-base text-[#2E363B]">
                       {coach.name}
                     </h3>
-                    <span
-                      className={cn(
-                        "text-xs font-medium px-2 py-0.5 rounded-full border",
-                        isSelected
-                          ? "border-background/30 text-background/80"
-                          : "border-border text-muted-foreground"
-                      )}
-                    >
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full border border-gray-200 text-[#6B7680]">
                       {coach.style}
                     </span>
                     {isSelected && (
-                      <span className="text-xs font-black px-2 py-0.5 rounded-full bg-[#CFFF04] text-black">
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: "#C15F3C" }}>
                         Selected ✓
                       </span>
                     )}
                   </div>
-                  <p
-                    className={cn(
-                      "text-sm font-medium mb-1",
-                      isSelected ? "text-background/80" : "text-muted-foreground"
-                    )}
-                  >
+                  <p className="text-sm font-medium text-[#6B7680] mb-1">
                     {coach.tagline}
                   </p>
-                  <p
-                    className={cn(
-                      "text-sm leading-relaxed",
-                      isSelected ? "text-background/70" : "text-muted-foreground"
-                    )}
-                  >
+                  <p className="text-sm leading-relaxed text-[#6B7680]">
                     {coach.description}
                   </p>
                 </div>
@@ -263,24 +244,27 @@ function StepVoice({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="text-xs font-black uppercase tracking-widest text-[#CFFF04] mb-3">
+        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#C15F3C" }}>
           Step 3 of 4
         </p>
-        <h1 className="text-4xl sm:text-5xl font-black text-foreground uppercase tracking-tight leading-none mb-3">
-          TEST YOUR VOICE
+        <h1 className="text-3xl font-bold text-[#2E363B] leading-tight mb-2" style={{ fontFamily: "Georgia, serif" }}>
+          Test your voice
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-sm text-[#6B7680]">
           RunCoach talks to you while you run. Make sure you can hear it.
         </p>
       </div>
 
       {/* Play test */}
-      <div className="rounded-2xl border-2 border-border bg-background p-6 flex flex-col items-center gap-4 text-center">
-        <div className="size-20 rounded-full bg-[#CFFF04] flex items-center justify-center text-4xl">
+      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-6 flex flex-col items-center gap-4 text-center">
+        <div
+          className="size-20 rounded-full flex items-center justify-center text-4xl"
+          style={{ backgroundColor: "#FEF0E6" }}
+        >
           {playing ? "🔊" : tested ? "✅" : "🎙️"}
         </div>
         <div>
-          <p className="font-black text-foreground uppercase tracking-tight text-lg">
+          <p className="font-bold text-[#2E363B] text-lg">
             {playing
               ? "Listen up..."
               : tested
@@ -288,7 +272,7 @@ function StepVoice({
               : "Tap to hear a sample"}
           </p>
           {tested && (
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-[#6B7680] mt-1">
               Your coach will sound like this during your run.
             </p>
           )}
@@ -296,34 +280,31 @@ function StepVoice({
         <button
           onClick={playTest}
           disabled={playing}
-          className="px-8 py-3 rounded-xl bg-foreground text-background font-black uppercase tracking-tight text-sm disabled:opacity-50 transition-opacity"
+          className="px-8 py-2.5 rounded-full font-semibold text-sm text-white transition-opacity disabled:opacity-50"
+          style={{ backgroundColor: "#C15F3C" }}
         >
           {playing ? "Playing..." : tested ? "Play Again" : "Play Sample"}
         </button>
       </div>
 
       {/* Toggle */}
-      <div className="flex items-center justify-between gap-4 rounded-2xl border-2 border-border px-5 py-4">
+      <div className="flex items-center justify-between gap-4 rounded-2xl border border-gray-200 bg-white shadow-sm px-5 py-4">
         <div>
-          <p className="font-black text-foreground uppercase tracking-tight">
-            Voice Coaching
-          </p>
-          <p className="text-sm text-muted-foreground mt-0.5">
+          <p className="font-semibold text-[#2E363B] text-sm">Voice Coaching</p>
+          <p className="text-xs text-[#6B7680] mt-0.5">
             Get real-time audio cues while you run
           </p>
         </div>
         <button
           onClick={() => onVoice(!voiceEnabled)}
-          className={cn(
-            "relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors",
-            voiceEnabled ? "bg-[#CFFF04]" : "bg-muted"
-          )}
+          className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors"
+          style={{ backgroundColor: voiceEnabled ? "#C15F3C" : "#D1D5DB" }}
           role="switch"
           aria-checked={voiceEnabled}
         >
           <span
             className={cn(
-              "pointer-events-none inline-block h-6 w-6 rounded-full bg-black shadow-sm ring-0 transition-transform",
+              "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm ring-0 transition-transform",
               voiceEnabled ? "translate-x-5" : "translate-x-0"
             )}
           />
@@ -355,50 +336,50 @@ function StepReady({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="text-xs font-black uppercase tracking-widest text-[#CFFF04] mb-3">
+        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#C15F3C" }}>
           Step 4 of 4
         </p>
-        <h1 className="text-4xl sm:text-5xl font-black text-foreground uppercase tracking-tight leading-none mb-3">
-          READY TO RUN
+        <h1 className="text-3xl font-bold text-[#2E363B] leading-tight mb-2" style={{ fontFamily: "Georgia, serif" }}>
+          Ready to run
         </h1>
-        <p className="text-muted-foreground">Here&apos;s what we set up for you.</p>
+        <p className="text-sm text-[#6B7680]">Here&apos;s what we set up for you.</p>
       </div>
 
       <div className="flex flex-col gap-3">
-        <div className="rounded-2xl border-2 border-border bg-background px-5 py-4 flex items-center justify-between gap-4">
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm px-5 py-4 flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#6B7680] mb-1">
               Your Goal
             </p>
-            <p className="font-black text-foreground text-lg uppercase tracking-tight">
+            <p className="font-bold text-[#2E363B] text-base">
               {goalLabel}
             </p>
           </div>
           <span className="text-2xl">🎯</span>
         </div>
 
-        <div className="rounded-2xl border-2 border-border bg-background px-5 py-4 flex items-center justify-between gap-4">
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm px-5 py-4 flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#6B7680] mb-1">
               Your Coach
             </p>
-            <p className="font-black text-foreground text-lg uppercase tracking-tight">
+            <p className="font-bold text-[#2E363B] text-base">
               {coach ? `${coach.emoji} ${coach.name}` : "—"}
             </p>
             {coach && (
-              <p className="text-sm text-muted-foreground mt-0.5">
+              <p className="text-xs text-[#6B7680] mt-0.5">
                 {coach.tagline}
               </p>
             )}
           </div>
         </div>
 
-        <div className="rounded-2xl border-2 border-border bg-background px-5 py-4 flex items-center justify-between gap-4">
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm px-5 py-4 flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#6B7680] mb-1">
               Voice Coaching
             </p>
-            <p className="font-black text-foreground text-lg uppercase tracking-tight">
+            <p className="font-bold text-[#2E363B] text-base">
               {voiceEnabled ? "Enabled" : "Disabled"}
             </p>
           </div>
@@ -406,11 +387,11 @@ function StepReady({
         </div>
       </div>
 
-      <div className="rounded-2xl bg-[#CFFF04] px-5 py-4">
-        <p className="font-black text-black uppercase tracking-tight">
+      <div className="rounded-2xl px-5 py-4" style={{ backgroundColor: "#FEF0E6", border: "1px solid #F5C5A3" }}>
+        <p className="font-bold text-[#C15F3C] text-sm">
           You&apos;re all set!
         </p>
-        <p className="text-sm text-black/70 mt-1">
+        <p className="text-sm text-[#2E363B]/70 mt-1">
           Hit the button below to start your first run. Your coach is ready.
         </p>
       </div>
@@ -466,18 +447,18 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#FAF7F4" }}>
       {/* Top bar */}
       <div className="flex items-center justify-between px-6 pt-8 pb-4 max-w-2xl mx-auto w-full">
-        <span className="font-black text-foreground text-lg tracking-tight uppercase">
-          RUNCOACH
+        <span className="font-bold text-[#2E363B] text-lg" style={{ fontFamily: "Georgia, serif" }}>
+          RunCoach
         </span>
         <button
           onClick={() => {
             localStorage.setItem("onboarding_complete", "skipped");
             router.push("/dashboard");
           }}
-          className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          className="text-sm font-medium text-[#6B7680] hover:text-[#2E363B] transition-colors"
         >
           Skip
         </button>
@@ -515,12 +496,16 @@ export default function OnboardingPage() {
       </div>
 
       {/* Bottom nav */}
-      <div className="sticky bottom-0 border-t border-border bg-background/95 backdrop-blur px-6 py-4">
+      <div
+        className="sticky bottom-0 px-6 py-4"
+        style={{ backgroundColor: "rgba(250,247,244,0.97)", backdropFilter: "blur(8px)", borderTop: "1px solid #EDE8E3" }}
+      >
         <div className="max-w-2xl mx-auto flex items-center gap-3">
           {step > 0 && (
             <button
               onClick={handleBack}
-              className="h-14 px-6 rounded-xl border-2 border-border font-black uppercase text-sm text-foreground hover:border-foreground transition-colors"
+              className="h-14 px-6 rounded-full border font-semibold text-sm text-[#2E363B] transition-colors hover:border-[#2E363B]"
+              style={{ borderWidth: 1.5, borderColor: "#D1D5DB" }}
             >
               Back
             </button>
@@ -528,14 +513,10 @@ export default function OnboardingPage() {
           <button
             onClick={handleNext}
             disabled={!canContinue()}
-            className={cn(
-              "flex-1 h-14 rounded-xl font-black uppercase tracking-tight text-lg transition-all",
-              canContinue()
-                ? "bg-[#CFFF04] text-black hover:bg-[#b8e004]"
-                : "bg-muted text-muted-foreground cursor-not-allowed"
-            )}
+            className="flex-1 h-14 rounded-full font-bold text-base text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{ backgroundColor: "#C15F3C" }}
           >
-            {step === TOTAL_STEPS - 1 ? "START YOUR FIRST RUN →" : "Continue →"}
+            {step === TOTAL_STEPS - 1 ? "Start your first run" : "Continue"}
           </button>
         </div>
       </div>

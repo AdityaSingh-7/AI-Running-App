@@ -1,17 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 async function signInAction(formData: FormData) {
   "use server";
@@ -32,109 +22,144 @@ async function signInWithGitHub() {
 
 export default function LoginPage() {
   return (
-    <div className="w-full max-w-sm">
-      {/* Logo */}
-      <div className="text-center mb-8">
-        <Link href="/" className="inline-flex items-center gap-2">
-          <span className="text-black font-black tracking-widest text-lg uppercase">
-            RunCoach
-          </span>
-        </Link>
-      </div>
-
-      <div className="bg-white border border-[#e5e5e5] p-8">
-        <div className="mb-6">
-          <h1 className="text-black font-black uppercase text-xl tracking-tight">
-            Welcome back
-          </h1>
-          <p className="text-gray-500 text-sm mt-1">
-            Sign in to your account to continue
+    <div
+      className="min-h-screen flex items-center justify-center px-4 py-12"
+      style={{ background: "#FDF8F4" }}
+    >
+      <div className="w-full max-w-sm">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center gap-2">
+            <span className="font-bold text-xl" style={{ color: "#2E363B" }}>
+              RunCoach
+            </span>
+          </Link>
+          <p className="text-sm mt-1" style={{ color: "#6B7680" }}>
+            Welcome back, runner
           </p>
         </div>
 
-        <div className="flex flex-col gap-4">
-          {/* GitHub OAuth */}
-          <form action={signInWithGitHub}>
-            <button
-              type="submit"
-              className="w-full h-10 flex items-center justify-center gap-2 border border-[#e5e5e5] hover:border-black text-black font-bold text-sm tracking-wide transition-colors bg-white"
-            >
-              <GitHubIcon />
-              Sign in with GitHub
-            </button>
-          </form>
-
-          <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-[#e5e5e5]" />
-            <span className="text-xs text-gray-400 uppercase tracking-wider">
-              or
-            </span>
-            <div className="flex-1 h-px bg-[#e5e5e5]" />
+        <div
+          className="rounded-2xl p-8"
+          style={{
+            background: "#FFFFFF",
+            boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
+            border: "1px solid #F0EDEB",
+          }}
+        >
+          <div className="mb-6">
+            <h1 className="font-bold text-xl" style={{ color: "#2E363B" }}>
+              Sign in
+            </h1>
+            <p className="text-sm mt-1" style={{ color: "#6B7680" }}>
+              Sign in to your account to continue
+            </p>
           </div>
 
-          {/* Email / Password form */}
-          <form action={signInAction} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1.5">
-              <Label
-                htmlFor="email"
-                className="text-xs font-bold uppercase tracking-widest text-black"
+          <div className="flex flex-col gap-4">
+            {/* GitHub OAuth */}
+            <form action={signInWithGitHub}>
+              <button
+                type="submit"
+                className="w-full h-11 flex items-center justify-center gap-2 font-medium text-sm transition-colors rounded-full"
+                style={{
+                  border: "1.5px solid #F0EDEB",
+                  background: "#FFFFFF",
+                  color: "#2E363B",
+                }}
               >
-                Email
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                required
-                autoComplete="email"
-                className="h-10 border-[#e5e5e5] focus:border-black focus:ring-0 rounded-none text-black placeholder:text-gray-400"
-              />
+                <GitHubIcon />
+                Sign in with GitHub
+              </button>
+            </form>
+
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px" style={{ background: "#F0EDEB" }} />
+              <span className="text-xs font-medium" style={{ color: "#6B7680" }}>
+                or
+              </span>
+              <div className="flex-1 h-px" style={{ background: "#F0EDEB" }} />
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
+            {/* Email / Password form */}
+            <form action={signInAction} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
                 <Label
-                  htmlFor="password"
-                  className="text-xs font-bold uppercase tracking-widest text-black"
+                  htmlFor="email"
+                  className="text-xs font-semibold"
+                  style={{ color: "#2E363B" }}
                 >
-                  Password
+                  Email
                 </Label>
-                <Link
-                  href="/forgot-password"
-                  className="text-xs text-black underline hover:no-underline"
-                >
-                  Forgot password?
-                </Link>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                  autoComplete="email"
+                  className="h-11 rounded-xl text-sm"
+                  style={{
+                    border: "1.5px solid #F0EDEB",
+                    background: "#F5F2EF",
+                    color: "#2E363B",
+                  }}
+                />
               </div>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                required
-                autoComplete="current-password"
-                className="h-10 border-[#e5e5e5] focus:border-black focus:ring-0 rounded-none text-black placeholder:text-gray-400"
-              />
-            </div>
 
-            <button
-              type="submit"
-              className="w-full h-10 bg-black hover:bg-[#1a1a1a] text-white font-black text-sm tracking-widest uppercase transition-colors mt-1"
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <Label
+                    htmlFor="password"
+                    className="text-xs font-semibold"
+                    style={{ color: "#2E363B" }}
+                  >
+                    Password
+                  </Label>
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs font-medium hover:underline"
+                    style={{ color: "#C15F3C" }}
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                  className="h-11 rounded-xl text-sm"
+                  style={{
+                    border: "1.5px solid #F0EDEB",
+                    background: "#F5F2EF",
+                    color: "#2E363B",
+                  }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full h-12 font-semibold text-white text-sm transition-colors mt-1 rounded-full"
+                style={{ background: "#C15F3C" }}
+              >
+                Sign In
+              </button>
+            </form>
+          </div>
+
+          <div className="mt-6 text-center text-sm" style={{ color: "#6B7680" }}>
+            Don&apos;t have an account?&nbsp;
+            <Link
+              href="/register"
+              className="font-semibold hover:underline"
+              style={{ color: "#C15F3C" }}
             >
-              Sign In
-            </button>
-          </form>
-        </div>
-
-        <div className="mt-6 text-center text-sm text-gray-500">
-          Don&apos;t have an account?&nbsp;
-          <Link
-            href="/register"
-            className="text-black font-bold underline hover:no-underline"
-          >
-            Create one
-          </Link>
+              Create one
+            </Link>
+          </div>
         </div>
       </div>
     </div>

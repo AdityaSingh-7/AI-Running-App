@@ -4,45 +4,74 @@ import { MapPin, Mic, BarChart3 } from "lucide-react";
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen" style={{ background: "#FDF8F4" }}>
       {/* Nav */}
-      <header className="bg-black px-6 py-4 flex items-center justify-between">
-        <span className="text-white font-black tracking-widest text-sm uppercase">
+      <header
+        className="px-6 py-4 flex items-center justify-between"
+        style={{ background: "#FDF8F4", borderBottom: "1px solid #F0EDEB" }}
+      >
+        <span className="font-bold text-[#2E363B] text-base">
           RunCoach
         </span>
         <Link
           href="/login"
-          className="text-white/70 hover:text-white text-sm font-medium tracking-wide transition-colors"
+          className="text-[#6B7680] hover:text-[#2E363B] text-sm font-medium transition-colors"
         >
           Sign In
         </Link>
       </header>
 
-      {/* Hero — pure black */}
-      <section className="bg-black flex-1 flex flex-col items-center justify-center px-6 py-28 text-center">
-        <p className="text-[#CFFF04] text-xs font-bold tracking-[0.3em] uppercase mb-6">
+      {/* Hero */}
+      <section
+        className="flex-1 flex flex-col items-center justify-center px-6 py-24 text-center"
+        style={{ background: "#FDF8F4" }}
+      >
+        <span
+          className="text-xs font-semibold mb-5 px-3 py-1 rounded-full"
+          style={{ background: "#FCEEE8", color: "#9B4628" }}
+        >
           AI-Powered Coaching
-        </p>
+        </span>
 
-        <h1 className="text-white font-black uppercase leading-none tracking-tight mb-6"
-            style={{ fontSize: "clamp(3.5rem, 10vw, 8rem)" }}>
-          RUN<br />SMARTER.
+        <h1
+          className="font-black leading-none tracking-tight mb-5"
+          style={{
+            fontSize: "clamp(3rem, 10vw, 7rem)",
+            color: "#2E363B",
+          }}
+        >
+          Run<br />
+          <span style={{ color: "#C15F3C" }}>Smarter.</span>
         </h1>
 
-        <p className="text-gray-400 text-lg max-w-md mx-auto mb-10 leading-relaxed">
-          AI-powered coaching that adapts to every stride.
+        <p className="text-[#6B7680] text-lg max-w-sm mx-auto mb-10 leading-relaxed">
+          AI-powered coaching that adapts to every stride. Track, improve, and love every run.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
+        <div className="flex flex-col sm:flex-row gap-3 items-center w-full max-w-xs">
           <Link
             href="/register"
-            className="inline-flex items-center justify-center h-12 px-10 bg-[#CFFF04] hover:bg-[#d9ff2e] text-black font-black text-sm tracking-widest uppercase transition-colors"
+            className="w-full inline-flex items-center justify-center font-semibold text-white transition-colors"
+            style={{
+              background: "#C15F3C",
+              height: "52px",
+              borderRadius: "999px",
+              fontSize: "15px",
+            }}
           >
             Get Started
           </Link>
           <Link
             href="/login"
-            className="inline-flex items-center justify-center h-12 px-10 border border-white/30 hover:border-white text-white font-bold text-sm tracking-widest uppercase transition-colors"
+            className="w-full inline-flex items-center justify-center font-semibold transition-colors"
+            style={{
+              background: "#FFFFFF",
+              border: "1.5px solid #F0EDEB",
+              height: "52px",
+              borderRadius: "999px",
+              fontSize: "15px",
+              color: "#2E363B",
+            }}
           >
             Sign In
           </Link>
@@ -50,46 +79,58 @@ export default function LandingPage() {
       </section>
 
       {/* Stats strip */}
-      <div className="bg-[#CFFF04] px-6 py-5 flex flex-col sm:flex-row items-center justify-center gap-10">
+      <div
+        className="px-6 py-6 flex flex-col sm:flex-row items-center justify-center gap-10"
+        style={{ background: "#FFFFFF", borderTop: "1px solid #F0EDEB" }}
+      >
         {[
           { value: "10K+", label: "Runs Logged" },
           { value: "4.9", label: "App Rating" },
           { value: "100%", label: "Adaptive" },
         ].map((stat) => (
           <div key={stat.label} className="text-center">
-            <div className="text-black font-black text-3xl tracking-tight font-mono">
+            <div
+              className="font-black text-3xl"
+              style={{ color: "#C15F3C" }}
+            >
               {stat.value}
             </div>
-            <div className="text-black/60 text-xs font-bold tracking-widest uppercase mt-0.5">
+            <div
+              className="text-xs font-medium mt-0.5"
+              style={{ color: "#6B7680" }}
+            >
               {stat.label}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Features — white section */}
-      <section className="py-24 px-6 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-16">
-            <h2 className="text-black font-black uppercase text-4xl tracking-tight leading-tight mb-3">
-              Built for<br />every runner.
-            </h2>
-            <div className="w-12 h-1 bg-black" />
-          </div>
+      {/* Features */}
+      <section className="py-20 px-6" style={{ background: "#FDF8F4" }}>
+        <div className="max-w-3xl mx-auto">
+          <h2
+            className="font-black text-3xl leading-tight mb-2"
+            style={{ color: "#2E363B" }}
+          >
+            Built for every runner.
+          </h2>
+          <p className="text-[#6B7680] mb-12 text-base">
+            Everything you need to train smarter, not just harder.
+          </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#e5e5e5]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <FeatureCard
-              icon={<MapPin className="size-6" strokeWidth={1.5} />}
+              icon={<MapPin className="size-5" strokeWidth={1.5} />}
               title="GPS Tracking"
               description="Precise route tracking with live maps. Every step of your run plotted in real time."
             />
             <FeatureCard
-              icon={<Mic className="size-6" strokeWidth={1.5} />}
+              icon={<Mic className="size-5" strokeWidth={1.5} />}
               title="Voice Coaching"
               description="Real-time audio cues from your AI coach. Pace reminders and form tips exactly when you need them."
             />
             <FeatureCard
-              icon={<BarChart3 className="size-6" strokeWidth={1.5} />}
+              icon={<BarChart3 className="size-5" strokeWidth={1.5} />}
               title="Analytics"
               description="Deep performance insights after every run. Track pace trends and personal records over time."
             />
@@ -97,23 +138,44 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Banner — black */}
-      <section className="py-20 px-6 bg-black text-center">
-        <h2 className="text-white font-black uppercase text-3xl tracking-tight mb-4">
+      {/* CTA */}
+      <section
+        className="py-20 px-6 text-center"
+        style={{ background: "#FFFFFF", borderTop: "1px solid #F0EDEB" }}
+      >
+        <h2
+          className="font-black text-2xl mb-3"
+          style={{ color: "#2E363B" }}
+        >
           Ready to train smarter?
         </h2>
-        <p className="text-gray-400 mb-10 max-w-sm mx-auto text-sm leading-relaxed">
+        <p className="text-[#6B7680] mb-8 max-w-sm mx-auto text-sm leading-relaxed">
           Join runners already training with AI coaching.
         </p>
         <Link
           href="/register"
-          className="inline-flex items-center justify-center h-12 px-10 bg-[#CFFF04] hover:bg-[#d9ff2e] text-black font-black text-sm tracking-widest uppercase transition-colors"
+          className="inline-flex items-center justify-center font-semibold text-white transition-colors"
+          style={{
+            background: "#C15F3C",
+            height: "52px",
+            borderRadius: "999px",
+            paddingLeft: "36px",
+            paddingRight: "36px",
+            fontSize: "15px",
+          }}
         >
           Start for Free
         </Link>
       </section>
 
-      <footer className="py-6 px-6 bg-black border-t border-white/10 text-center text-gray-600 text-xs tracking-widest uppercase">
+      <footer
+        className="py-5 px-6 text-center text-xs"
+        style={{
+          background: "#FDF8F4",
+          borderTop: "1px solid #F0EDEB",
+          color: "#6B7680",
+        }}
+      >
         © {new Date().getFullYear()} RunCoach. Built for runners, by runners.
       </footer>
     </div>
@@ -130,13 +192,27 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="bg-white p-8 flex flex-col gap-5">
-      <div className="text-black">{icon}</div>
+    <div
+      className="p-6 flex flex-col gap-4 rounded-2xl"
+      style={{
+        background: "#FFFFFF",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+        border: "1px solid #F0EDEB",
+      }}
+    >
+      <div
+        className="size-10 rounded-xl flex items-center justify-center"
+        style={{ background: "#FCEEE8", color: "#C15F3C" }}
+      >
+        {icon}
+      </div>
       <div>
-        <h3 className="text-black font-black uppercase text-sm tracking-widest mb-2">
+        <h3 className="font-semibold text-sm mb-1" style={{ color: "#2E363B" }}>
           {title}
         </h3>
-        <p className="text-gray-500 text-sm leading-relaxed">{description}</p>
+        <p className="text-sm leading-relaxed" style={{ color: "#6B7680" }}>
+          {description}
+        </p>
       </div>
     </div>
   );

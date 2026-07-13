@@ -28,8 +28,8 @@ function StatusDot({ status }: { status: string }) {
     <span
       className={cn(
         "inline-block size-2 rounded-full",
-        isConnected && "bg-[#CFFF04]",
-        isConnecting && "animate-pulse bg-yellow-400",
+        isConnected && "bg-[#C15F3C]",
+        isConnecting && "animate-pulse bg-amber-400",
         isError && "bg-red-500",
         !isConnected && !isConnecting && !isError && "bg-gray-400"
       )}
@@ -178,13 +178,13 @@ export function VoiceCoach({
       {/* Weather badge */}
       {weather && (
         <div
-          className="flex items-center gap-1 rounded-xl px-2.5 py-2 bg-black/80 backdrop-blur-sm shadow-md border border-white/10 shrink-0"
+          className="flex items-center gap-1 rounded-full px-2.5 py-1.5 bg-white shadow-sm shrink-0"
           aria-label={`Weather: ${weather.temperature}°C, ${weather.condition}`}
         >
-          <span className="text-base leading-none select-none" aria-hidden>
+          <span className="text-sm leading-none select-none" aria-hidden>
             {weather.icon}
           </span>
-          <span className="text-xs font-bold text-white tabular-nums">
+          <span className="text-xs font-semibold text-[#2E363B] tabular-nums">
             {Math.round(weather.temperature)}°C
           </span>
         </div>
@@ -193,7 +193,7 @@ export function VoiceCoach({
       <div
         className={cn(
           "flex flex-1 items-center gap-2 rounded-xl px-3 py-2",
-          "bg-black/80 backdrop-blur-sm shadow-md border border-white/10",
+          "bg-white/90 backdrop-blur-sm shadow-sm border border-gray-100",
           "text-sm"
         )}
         role="region"
@@ -207,17 +207,17 @@ export function VoiceCoach({
         {/* Status dot + coach name */}
         <div className="flex items-center gap-1.5 shrink-0">
           <StatusDot status={status} />
-          <span className="font-medium text-xs text-white/70">
+          <span className="font-medium text-xs text-[#6B7680]">
             {displayName}
           </span>
           {isSpeaking && (
-            <span className="text-xs text-[#CFFF04] animate-pulse">speaking</span>
+            <span className="text-xs animate-pulse" style={{ color: "#C15F3C" }}>speaking</span>
           )}
         </div>
 
         {/* Last transcript */}
         {transcript && (
-          <p className="flex-1 text-xs truncate text-white" title={transcript}>
+          <p className="flex-1 text-xs truncate text-[#2E363B]" title={transcript}>
             {transcript}
           </p>
         )}
