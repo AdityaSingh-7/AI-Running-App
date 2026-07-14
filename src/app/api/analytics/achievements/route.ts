@@ -78,7 +78,7 @@ export async function GET() {
   };
 
   const unlocked = calculateAchievements(stats);
-  const unlockedIds = new Set(unlocked.map((a) => a.id));
+  const unlockedIds = new Set(unlocked.map((a: { id: string }) => a.id));
 
   const allAchievements = ACHIEVEMENTS.map(
     ({ id, name, description, emoji }) => ({

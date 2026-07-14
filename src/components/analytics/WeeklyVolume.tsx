@@ -78,7 +78,7 @@ export function WeeklyVolume({ data }: WeeklyVolumeProps) {
     );
   }
 
-  const chartData = data.map((d) => ({
+  const chartData = data.map((d: WeeklyVolumeDataPoint) => ({
     ...d,
     distanceKm: parseFloat((d.distanceM / 1000).toFixed(2)),
   }));
@@ -115,7 +115,7 @@ export function WeeklyVolume({ data }: WeeklyVolumeProps) {
         />
         <Tooltip content={<CustomTooltip />} cursor={{ fill: "#f1f5f9" }} />
         <Bar dataKey="distanceKm" radius={[4, 4, 0, 0]} maxBarSize={48}>
-          {chartData.map((_, i) => (
+          {chartData.map((_: unknown, i: number) => (
             <Cell key={i} fill="url(#barGradient)" />
           ))}
         </Bar>

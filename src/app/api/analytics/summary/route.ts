@@ -23,7 +23,7 @@ function aggregateRuns(
     avgPaceSPerKm: number | null;
   }>
 ): WeekStats {
-  const paced = runs.filter((r) => r.avgPaceSPerKm && r.avgPaceSPerKm > 0);
+  const paced = runs.filter((r: { totalDistanceM: number; totalDurationS: number; avgPaceSPerKm: number | null }) => r.avgPaceSPerKm && r.avgPaceSPerKm > 0);
   return {
     runs: runs.length,
     distanceM: runs.reduce((s: number, r) => s + r.totalDistanceM, 0),

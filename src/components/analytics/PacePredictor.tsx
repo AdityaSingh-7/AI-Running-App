@@ -78,7 +78,7 @@ export default function PacePredictor({ splits, targetDistanceKm }: PacePredicto
   const trendArrow = slope < -1 ? "↑" : slope > 1 ? "↓" : "→";
 
   // Actual seconds completed so far (each split = 1 km)
-  const actualSecs = splits.reduce((sum, s) => sum + s.paceSecsPerKm, 0);
+  const actualSecs = splits.reduce((sum: number, s: Split) => sum + s.paceSecsPerKm, 0);
 
   // Predicted finish time if targetDistanceKm provided
   let predictedFinishLabel: string | null = null;

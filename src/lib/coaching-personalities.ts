@@ -108,7 +108,9 @@ Always use the runner's current stats. Never let the runner feel comfortable —
 
 export function getPersonality(id: string): CoachPersonality | undefined {
   // Check built-in personalities first
-  const builtIn = COACHING_PERSONALITIES.find((p) => p.id === id);
+  const builtIn = COACHING_PERSONALITIES.find(
+    (p: CoachPersonality) => p.id === id
+  );
   if (builtIn) return builtIn;
 
   // Check localStorage for custom coach

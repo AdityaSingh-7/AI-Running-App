@@ -123,7 +123,7 @@ export default function RunSetupPage() {
 
       {/* Coach cards */}
       <div className="flex flex-col gap-3">
-        {coaches.map((coach) => {
+        {coaches.map((coach: typeof coaches[number]) => {
           const isSelected = selectedCoach === coach.id;
           return (
             <button
@@ -279,14 +279,14 @@ export default function RunSetupPage() {
             <div className="flex items-center gap-3 mb-3">
               <div
                 className="size-8 rounded-lg flex items-center justify-center text-sm font-bold text-white"
-                style={{ backgroundColor: coaches.find((c) => c.id === selectedCoach)?.color ?? "#C15F3C" }}
+                style={{ backgroundColor: coaches.find((c: typeof coaches[number]) => c.id === selectedCoach)?.color ?? "#C15F3C" }}
               >
-                {coaches.find((c) => c.id === selectedCoach)?.icon ?? "✨"}
+                {coaches.find((c: typeof coaches[number]) => c.id === selectedCoach)?.icon ?? "✨"}
               </div>
               <p className="text-sm font-semibold text-[#2E363B]">
                 {selectedCoach === "custom"
                   ? customCoach?.name ?? "Custom coach"
-                  : coaches.find((c) => c.id === selectedCoach)?.name} is ready
+                  : coaches.find((c: typeof coaches[number]) => c.id === selectedCoach)?.name} is ready
               </p>
             </div>
           ) : (

@@ -73,7 +73,7 @@ function getWeekStripDays(): { label: string; date: Date }[] {
   const sunday = new Date(now);
   sunday.setDate(now.getDate() - now.getDay());
   sunday.setHours(0, 0, 0, 0);
-  return ["S", "M", "T", "W", "T", "F", "S"].map((label, i) => {
+  return ["S", "M", "T", "W", "T", "F", "S"].map((label: string, i: number) => {
     const d = new Date(sunday);
     d.setDate(sunday.getDate() + i);
     return { label, date: d };
@@ -187,11 +187,11 @@ export default function HistoryPage() {
     setError(null);
 
     fetch(`/api/runs?page=${page}&limit=${PAGE_LIMIT}`)
-      .then((res) => {
+      .then((res: Response) => {
         if (!res.ok) throw new Error(`Failed to load runs (${res.status})`);
         return res.json() as Promise<RunsResponse>;
       })
-      .then((json) => {
+      .then((json: RunsResponse) => {
         if (!cancelled) {
           setResponse(json);
           setLoading(false);
@@ -230,7 +230,7 @@ export default function HistoryPage() {
   // Week strip: which days of this week have runs
   const weekDays = getWeekStripDays();
   const runDates = React.useMemo(
-    () => (response?.runs ?? []).map((r) => new Date(r.startedAt)),
+    () => (response?.runs ?? []).map((r: Run) => new Date(r.startedAt)),
     [response?.runs]
   );
 
@@ -276,8 +276,8 @@ export default function HistoryPage() {
       {!loading && sortedRuns.length > 0 && (
         <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-4">
           <div className="grid grid-cols-7 gap-1">
-            {weekDays.map(({ label, date }, i) => {
-              const hasRun = runDates.some((rd) => isSameDay(rd, date));
+            {weekDays.map(({ label, date }: { label: string; date: Date }, i: number) => {
+              const hasRun = runDates.some((rd: Date) => isSameDay(rd, date));
               return (
                 <div key={i} className="flex flex-col items-center gap-1.5">
                   <span className="text-[11px] font-medium text-[#6B7680] uppercase">
@@ -326,7 +326,7 @@ export default function HistoryPage() {
       {/* Loading skeleton */}
       {loading && (
         <div className="space-y-2">
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: 5 }).map((_: unknown, i: number) => (
             <div
               key={i}
               className="bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-4 flex gap-3 items-center animate-pulse"
@@ -361,13 +361,13 @@ export default function HistoryPage() {
       {/* Run groups */}
       {!loading && !error && groupedRuns.length > 0 && (
         <div className="flex flex-col gap-5">
-          {groupedRuns.map(({ label, runs }) => (
+          {groupedRuns.map(({ label, runs }: { label: string; runs: Run[] }) => (
             <div key={label}>
               <p className="text-[13px] font-semibold uppercase tracking-widest text-[#6B7680] mb-2">
                 {label}
               </p>
               <div className="flex flex-col gap-2">
-                {runs.map((run) => (
+                {runs.map((run: Run) => (
                   <RunCard key={run.id} run={run} />
                 ))}
               </div>

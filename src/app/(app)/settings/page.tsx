@@ -75,7 +75,7 @@ export default function SettingsPage() {
           Personal Bests
         </p>
         <div className="grid grid-cols-3 gap-3">
-          {PERSONAL_BESTS.map((pb) => (
+          {PERSONAL_BESTS.map((pb: typeof PERSONAL_BESTS[number]) => (
             <div key={pb.label} className="bg-white rounded-2xl p-4 shadow-sm text-center">
               <p className="font-bold text-sm" style={{ color: "#C15F3C" }}>
                 {pb.value}
@@ -172,7 +172,7 @@ export default function SettingsPage() {
           Preferred Coach
         </p>
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          {coaches.map((coach, i) => (
+          {coaches.map((coach: typeof coaches[number], i: number) => (
             <button
               key={coach.id}
               onClick={() => setSelectedCoach(coach.id)}

@@ -53,7 +53,7 @@ function computeStats(
   // Current pace: use only points within the last CURRENT_PACE_WINDOW_SECS seconds
   const now = positions[positions.length - 1].timestamp;
   const windowStart = now - CURRENT_PACE_WINDOW_SECS * 1000;
-  const windowPoints = positions.filter((p) => p.timestamp >= windowStart);
+  const windowPoints = positions.filter((p: GeoPosition) => p.timestamp >= windowStart);
 
   let currentPaceSecsPerKm = 0;
   if (windowPoints.length >= 2) {

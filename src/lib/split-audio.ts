@@ -9,9 +9,11 @@ function getAudioContext(): AudioContext | null {
   if (typeof window === "undefined") return null;
   if (!audioCtx) {
     try {
-      audioCtx = new (window.AudioContext ||
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).webkitAudioContext)();
+      const AudioContextCtor: typeof AudioContext | undefined =
+        window.AudioContext ??
+        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioContextCtor) return null;
+      audioCtx = new AudioContextCtor();
     } catch {
       return null;
     }

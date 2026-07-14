@@ -83,10 +83,15 @@ export function smoothPace(
   if (points.length === 0) return 0;
 
   const window = points.slice(-windowSize);
-  const validPoints = window.filter((p) => p.pace > 0 && isFinite(p.pace));
+  const validPoints = window.filter(
+    (p: { pace: number }) => p.pace > 0 && isFinite(p.pace)
+  );
 
   if (validPoints.length === 0) return 0;
 
-  const sum = validPoints.reduce((acc, p) => acc + p.pace, 0);
+  const sum = validPoints.reduce(
+    (acc: number, p: { pace: number }) => acc + p.pace,
+    0
+  );
   return sum / validPoints.length;
 }

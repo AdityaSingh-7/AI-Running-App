@@ -101,7 +101,7 @@ function RunDetailSkeleton() {
       </div>
       <Skeleton className="h-48 rounded-2xl" />
       <div className="grid grid-cols-3 gap-3">
-        {Array.from({ length: 3 }).map((_, i) => (
+        {Array.from({ length: 3 }).map((_: unknown, i: number) => (
           <Skeleton key={i} className="h-20 rounded-2xl" />
         ))}
       </div>
@@ -142,11 +142,11 @@ export default function RunDetailPage() {
     if (!runId) return;
     setLoading(true);
     fetch(`/api/runs/${runId}`)
-      .then(async (res) => {
+      .then(async (res: Response) => {
         if (!res.ok) throw new Error("Run not found");
         return res.json() as Promise<RunDetail>;
       })
-      .then((data) => {
+      .then((data: RunDetail) => {
         setRun(data);
         setTitleDraft(data.title ?? "");
         setNotesDraft(data.notes ?? "");
@@ -157,7 +157,7 @@ export default function RunDetailPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ runId: data.id }),
         })
-          .then(async (res) => {
+          .then(async (res: Response) => {
             if (res.status === 503) {
               setAnalysisError("no-key");
               return;
@@ -282,14 +282,14 @@ export default function RunDetailPage() {
     );
   }
 
-  const positions = run.points.map((p) => ({
+  const positions = run.points.map((p: RunPoint) => ({
     latitude: p.latitude,
     longitude: p.longitude,
   }));
 
   // Build split markers
   const splitMarkers = run.splits
-    .map((split) => {
+    .map((split: RunSplit) => {
       if (run.points.length === 0) return null;
       const idx = Math.min(
         Math.round((split.splitNumber / run.splits.length) * (run.points.length - 1)),
@@ -305,10 +305,10 @@ export default function RunDetailPage() {
 
   // For pace bar chart: find max pace to normalize bar widths
   const maxPace = run.splits.length > 0
-    ? Math.max(...run.splits.map((s) => s.avgPaceSPerKm))
+    ? Math.max(...run.splits.map((s: RunSplit) => s.avgPaceSPerKm))
     : 1;
   const minPace = run.splits.length > 0
-    ? Math.min(...run.splits.map((s) => s.avgPaceSPerKm))
+    ? Math.min(...run.splits.map((s: RunSplit) => s.avgPaceSPerKm))
     : 1;
 
   // Check if this is a notable run (PR candidate: longest or fastest)
@@ -449,7 +449,7 @@ export default function RunDetailPage() {
             Splits
           </p>
           <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] overflow-hidden">
-            {run.splits.map((split, idx) => {
+            {run.splits.map((split: RunSplit, idx: number) => {
               // Normalize: faster pace = longer bar (invert scale)
               const paceRange = maxPace - minPace || 1;
               const barPct = Math.max(

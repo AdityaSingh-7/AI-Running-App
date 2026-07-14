@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Clock, Play, Medal, User, Menu, X } from "lucide-react";
+import { Home, Clock, Play, Medal, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
@@ -26,7 +26,7 @@ function DesktopNav() {
           RunCoach
         </Link>
         <nav className="flex items-center gap-1">
-          {tabs.filter(t => !t.center).map((tab) => {
+          {tabs.filter((t: typeof tabs[number]) => !t.center).map((tab: typeof tabs[number]) => {
             const isActive =
               pathname === (tab.matchHref ?? tab.href) ||
               pathname.startsWith((tab.matchHref ?? tab.href) + "/");
@@ -70,7 +70,7 @@ function MobileTabBar() {
       style={{ height: "80px", paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="flex items-center justify-around h-full max-w-md mx-auto px-2">
-        {tabs.map((tab) => {
+        {tabs.map((tab: typeof tabs[number]) => {
           const isActive =
             pathname === (tab.matchHref ?? tab.href) ||
             pathname.startsWith((tab.matchHref ?? tab.href) + "/");

@@ -100,7 +100,7 @@ function StepGoal({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {GOAL_OPTIONS.map((opt) => (
+        {GOAL_OPTIONS.map((opt: typeof GOAL_OPTIONS[number]) => (
           <button
             key={opt.id}
             onClick={() => onGoal(opt.id)}
@@ -165,7 +165,7 @@ function StepCoach({
       </div>
 
       <div className="flex flex-col gap-3">
-        {coaches.map((coach) => {
+        {coaches.map((coach: typeof coaches[number]) => {
           const isSelected = selectedCoach === coach.id;
           return (
             <button
@@ -327,11 +327,11 @@ function StepReady({
   selectedCoach: string;
   voiceEnabled: boolean;
 }) {
-  const coach = coaches.find((c) => c.id === selectedCoach);
+  const coach = coaches.find((c: typeof coaches[number]) => c.id === selectedCoach);
   const goalLabel =
     goal === "custom"
       ? customGoal || "Custom goal"
-      : GOAL_OPTIONS.find((g) => g.id === goal)?.label ?? "—";
+      : GOAL_OPTIONS.find((g: typeof GOAL_OPTIONS[number]) => g.id === goal)?.label ?? "—";
 
   return (
     <div className="flex flex-col gap-6">

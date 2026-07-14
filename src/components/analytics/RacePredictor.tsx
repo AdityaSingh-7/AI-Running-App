@@ -25,7 +25,7 @@ export function RacePredictor() {
 
   React.useEffect(() => {
     fetch("/api/analytics/race-predictor")
-      .then((r) => r.json())
+      .then((r: Response) => r.json())
       .then((d: RacePredictorData) => setData(d))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -66,7 +66,7 @@ export function RacePredictor() {
           </tr>
         </thead>
         <tbody>
-          {data.predictions.map((p) => (
+          {data.predictions.map((p: Prediction) => (
             <tr
               key={p.distance}
               className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors"

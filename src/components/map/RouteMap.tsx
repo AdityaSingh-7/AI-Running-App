@@ -52,7 +52,7 @@ export default function RouteMap({ positions, splits, className }: RouteMapProps
             properties: {},
             geometry: {
               type: "LineString",
-              coordinates: positions.map((p) => [p.longitude, p.latitude]),
+              coordinates: positions.map((p: Position) => [p.longitude, p.latitude]),
             },
           },
         ]
@@ -64,8 +64,8 @@ export default function RouteMap({ positions, splits, className }: RouteMapProps
 
   const initialViewState = useMemo(() => {
     if (positions.length === 0) return { longitude: 0, latitude: 0, zoom: 2 };
-    const lngs = positions.map((p) => p.longitude);
-    const lats = positions.map((p) => p.latitude);
+    const lngs = positions.map((p: Position) => p.longitude);
+    const lats = positions.map((p: Position) => p.latitude);
     const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
     const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2;
     return { longitude: centerLng, latitude: centerLat, zoom: 13 };
@@ -79,8 +79,8 @@ export default function RouteMap({ positions, splits, className }: RouteMapProps
       const map = mapRef.current?.getMap();
       if (!map) return;
 
-      const lngs = positions.map((p) => p.longitude);
-      const lats = positions.map((p) => p.latitude);
+      const lngs = positions.map((p: Position) => p.longitude);
+      const lats = positions.map((p: Position) => p.latitude);
       const bounds: [number, number, number, number] = [
         Math.min(...lngs),
         Math.min(...lats),
@@ -136,7 +136,7 @@ export default function RouteMap({ positions, splits, className }: RouteMapProps
         )}
 
         {/* Split markers */}
-        {splits?.map((split) => (
+        {splits?.map((split: SplitMarker) => (
           <Marker
             key={split.splitNumber}
             longitude={split.longitude}

@@ -71,7 +71,7 @@ function ActiveRunInner() {
 
       try {
         const body = {
-          points: pending.map((p) => ({
+          points: pending.map((p: GeoPosition) => ({
             latitude: p.latitude,
             longitude: p.longitude,
             altitude: p.altitude ?? undefined,
@@ -108,7 +108,7 @@ function ActiveRunInner() {
     weatherFetchedRef.current = true;
     const firstPos = positions[0];
     fetch(`/api/weather?lat=${firstPos.latitude}&lng=${firstPos.longitude}`)
-      .then(async (res) => {
+      .then(async (res: Response) => {
         if (res.ok) {
           const data = await res.json() as WeatherData;
           setWeather(data);

@@ -13,19 +13,21 @@ export function analyzePaceVariability(
     };
   }
 
-  const paces = splits.map((s) => s.avgPaceSPerKm);
-  const mean = paces.reduce((a, b) => a + b, 0) / paces.length;
+  const paces = splits.map((s: { avgPaceSPerKm: number }) => s.avgPaceSPerKm);
+  const mean = paces.reduce((a: number, b: number) => a + b, 0) / paces.length;
   const variance =
-    paces.reduce((sum, p) => sum + Math.pow(p - mean, 2), 0) / paces.length;
+    paces.reduce((sum: number, p: number) => sum + Math.pow(p - mean, 2), 0) /
+    paces.length;
   const stdDev = Math.sqrt(variance);
   const variabilityPercent = (stdDev / mean) * 100;
 
   // Trend: compare first half average to second half average
   const half = Math.floor(paces.length / 2);
   const firstHalfAvg =
-    paces.slice(0, half).reduce((a, b) => a + b, 0) / half;
+    paces.slice(0, half).reduce((a: number, b: number) => a + b, 0) / half;
   const secondHalfAvg =
-    paces.slice(half).reduce((a, b) => a + b, 0) / (paces.length - half);
+    paces.slice(half).reduce((a: number, b: number) => a + b, 0) /
+    (paces.length - half);
 
   // Higher pace seconds = slower, so positive split means slowing down
   let trend: "even" | "positive_split" | "negative_split";

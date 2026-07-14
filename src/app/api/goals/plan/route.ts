@@ -3,6 +3,13 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateGoalPlan } from "@/lib/groq";
 
+interface GoalRunRow {
+  totalDistanceM: number;
+  totalDurationS: number;
+  avgPaceSPerKm: number | null;
+  startedAt: Date;
+}
+
 export async function POST(request: NextRequest) {
   if (!process.env.GROQ_API_KEY) {
     return NextResponse.json(
@@ -46,7 +53,7 @@ export async function POST(request: NextRequest) {
     recentRunsSummary = "No recent runs recorded yet — treat this as a beginner runner.";
   } else {
     recentRunsSummary = recentRuns
-      .map((r, i) => {
+      .map((r: GoalRunRow, i: number) => {
         const distKm = (r.totalDistanceM / 1000).toFixed(2);
         const durationMins = Math.floor(r.totalDurationS / 60);
         const date = r.startedAt.toLocaleDateString("en-US", {

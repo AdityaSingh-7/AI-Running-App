@@ -47,7 +47,7 @@ export default function RunMap({ positions, isLive = false, className }: RunMapP
             properties: {},
             geometry: {
               type: "LineString",
-              coordinates: positions.map((p) => [p.longitude, p.latitude]),
+              coordinates: positions.map((p: Position) => [p.longitude, p.latitude]),
             },
           },
         ]
@@ -62,8 +62,8 @@ export default function RunMap({ positions, isLive = false, className }: RunMapP
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    const lngs = positions.map((p) => p.longitude);
-    const lats = positions.map((p) => p.latitude);
+    const lngs = positions.map((p: Position) => p.longitude);
+    const lats = positions.map((p: Position) => p.latitude);
     const bounds: [number, number, number, number] = [
       Math.min(...lngs),
       Math.min(...lats),

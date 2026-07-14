@@ -36,7 +36,7 @@ export function PersonalRecords() {
 
   React.useEffect(() => {
     fetch("/api/analytics/records")
-      .then((r) => r.json())
+      .then((r: Response) => r.json())
       .then((data: { records: RecordEntry[] }) => setRecords(data.records ?? []))
       .catch(() => {})
       .finally(() => setLoading(false));

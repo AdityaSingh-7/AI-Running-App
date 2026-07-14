@@ -145,7 +145,7 @@ export default function DashboardPage() {
   React.useEffect(() => {
     setRecLoading(true);
     fetch("/api/coaching/recommend")
-      .then(async (res) => {
+      .then(async (res: Response) => {
         if (res.status === 503) { setRecNoKey(true); return; }
         if (!res.ok) throw new Error("Failed");
         const json = await res.json() as { recommendation?: string; message?: string };
@@ -159,7 +159,7 @@ export default function DashboardPage() {
   React.useEffect(() => {
     setSummaryLoading(true);
     fetch("/api/analytics/summary")
-      .then((r) => r.json())
+      .then((r: Response) => r.json())
       .then((d: SummaryData) => setSummaryData(d))
       .catch(() => {})
       .finally(() => setSummaryLoading(false));
@@ -169,7 +169,7 @@ export default function DashboardPage() {
   React.useEffect(() => {
     setAchievementsLoading(true);
     fetch("/api/analytics/achievements")
-      .then((r) => r.json())
+      .then((r: Response) => r.json())
       .then((d: AchievementsData) => setAchievementsData(d))
       .catch(() => {})
       .finally(() => setAchievementsLoading(false));
@@ -181,11 +181,11 @@ export default function DashboardPage() {
     setError(null);
 
     fetch(`/api/analytics?period=${period}`)
-      .then((res) => {
+      .then((res: Response) => {
         if (!res.ok) throw new Error(`Failed to load analytics (${res.status})`);
         return res.json() as Promise<AnalyticsData>;
       })
-      .then((json) => {
+      .then((json: AnalyticsData) => {
         if (!cancelled) {
           setData(json);
           setLoading(false);
@@ -429,7 +429,7 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                {data.recentRuns.map((run) => (
+                {data.recentRuns.map((run: RecentRun) => (
                   <Link
                     key={run.id}
                     href={`/history/${run.id}`}
@@ -493,7 +493,7 @@ export default function DashboardPage() {
               </p>
               {!achievementsLoading && achievementsData && (
                 <p className="text-[12px] text-[#6B7680]">
-                  {achievementsData.allAchievements.filter((a) => a.unlocked).length} /{" "}
+                  {achievementsData.allAchievements.filter((a: AchievementEntry) => a.unlocked).length} /{" "}
                   {achievementsData.allAchievements.length}
                 </p>
               )}
@@ -501,7 +501,7 @@ export default function DashboardPage() {
             <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-4">
               {achievementsLoading ? (
                 <div className="grid grid-cols-4 gap-3">
-                  {Array.from({ length: 8 }).map((_, i) => (
+                  {Array.from({ length: 8 }).map((_: unknown, i: number) => (
                     <div key={i} className="flex flex-col items-center gap-1.5 p-2 animate-pulse">
                       <div className="size-8 rounded-full bg-[#F0EDEB]" />
                       <div className="h-2 w-10 bg-[#F0EDEB] rounded" />
@@ -510,7 +510,7 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-4 gap-3">
-                  {achievementsData?.allAchievements.map((a) => (
+                  {achievementsData?.allAchievements.map((a: AchievementEntry) => (
                     <div
                       key={a.id}
                       title={a.description}

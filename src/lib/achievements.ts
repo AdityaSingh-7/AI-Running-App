@@ -26,63 +26,63 @@ export const ACHIEVEMENTS: Achievement[] = [
     name: "First Steps",
     description: "Complete your first run",
     emoji: "👟",
-    condition: (s) => s.totalRuns >= 1,
+    condition: (s: UserStats) => s.totalRuns >= 1,
   },
   {
     id: "getting_started",
     name: "Getting Started",
     description: "Complete 5 runs",
     emoji: "🌱",
-    condition: (s) => s.totalRuns >= 5,
+    condition: (s: UserStats) => s.totalRuns >= 5,
   },
   {
     id: "regular_runner",
     name: "Regular Runner",
     description: "Complete 10 runs",
     emoji: "🏃",
-    condition: (s) => s.totalRuns >= 10,
+    condition: (s: UserStats) => s.totalRuns >= 10,
   },
   {
     id: "dedicated",
     name: "Dedicated",
     description: "Complete 25 runs",
     emoji: "💪",
-    condition: (s) => s.totalRuns >= 25,
+    condition: (s: UserStats) => s.totalRuns >= 25,
   },
   {
     id: "5k_finisher",
     name: "5K Finisher",
     description: "Complete a 5km run",
     emoji: "🎯",
-    condition: (s) => s.longestRunM >= 5000,
+    condition: (s: UserStats) => s.longestRunM >= 5000,
   },
   {
     id: "10k_club",
     name: "10K Club",
     description: "Complete a 10km run",
     emoji: "🏅",
-    condition: (s) => s.longestRunM >= 10000,
+    condition: (s: UserStats) => s.longestRunM >= 10000,
   },
   {
     id: "half_marathon",
     name: "Half Marathon",
     description: "Complete a 21.1km run",
     emoji: "🏆",
-    condition: (s) => s.longestRunM >= 21100,
+    condition: (s: UserStats) => s.longestRunM >= 21100,
   },
   {
     id: "marathon_total",
     name: "Marathon Total",
     description: "Cover 42.2km in a single run",
     emoji: "🌍",
-    condition: (s) => s.longestRunM >= 42200,
+    condition: (s: UserStats) => s.longestRunM >= 42200,
   },
   {
     id: "speed_demon",
     name: "Speed Demon",
     description: "Run a sub-5:00/km average pace",
     emoji: "⚡",
-    condition: (s) =>
+    condition: (s: UserStats) =>
       s.fastestPaceSecsPerKm > 0 && s.fastestPaceSecsPerKm < 300,
   },
   {
@@ -90,7 +90,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     name: "Lightning",
     description: "Run a sub-4:00/km average pace",
     emoji: "🌩️",
-    condition: (s) =>
+    condition: (s: UserStats) =>
       s.fastestPaceSecsPerKm > 0 && s.fastestPaceSecsPerKm < 240,
   },
   {
@@ -98,28 +98,28 @@ export const ACHIEVEMENTS: Achievement[] = [
     name: "Week Warrior",
     description: "Achieve a 7-day run streak",
     emoji: "🔥",
-    condition: (s) => s.maxStreak >= 7,
+    condition: (s: UserStats) => s.maxStreak >= 7,
   },
   {
     id: "iron_will",
     name: "Iron Will",
     description: "Achieve a 14-day run streak",
     emoji: "🛡️",
-    condition: (s) => s.maxStreak >= 14,
+    condition: (s: UserStats) => s.maxStreak >= 14,
   },
   {
     id: "century",
     name: "Century",
     description: "Run 100km total distance",
     emoji: "💯",
-    condition: (s) => s.totalDistanceM >= 100000,
+    condition: (s: UserStats) => s.totalDistanceM >= 100000,
   },
 ];
 
 // ─── Calculate unlocked achievements ─────────────────────────────────────────
 
 export function calculateAchievements(stats: UserStats): Achievement[] {
-  return ACHIEVEMENTS.filter((a) => a.condition(stats));
+  return ACHIEVEMENTS.filter((a: Achievement) => a.condition(stats));
 }
 
 // ─── Calculate run streak ─────────────────────────────────────────────────────
