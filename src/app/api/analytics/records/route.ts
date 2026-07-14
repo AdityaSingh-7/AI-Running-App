@@ -133,17 +133,18 @@ export async function GET() {
   }
 
   // Fastest 1K split (RunSplit where distanceM ~= 1000)
-  type SplitWithRun = RecordRunRow["splits"][0] & { runId: string; runDate: Date };
+  type SplitRow = RecordRunRow["splits"][0];
+  type SplitWithRun = SplitRow & { runId: string; runDate: Date };
   const allSplits: SplitWithRun[] = runs.flatMap((r: RecordRunRow) =>
     r.splits
       .filter(
-        (s) =>
+        (s: SplitRow) =>
           s.distanceM >= 900 &&
           s.distanceM <= 1100 &&
           s.avgPaceSPerKm &&
           s.avgPaceSPerKm > 0
       )
-      .map((s) => ({ ...s, runId: r.id, runDate: r.startedAt }))
+      .map((s: SplitRow) => ({ ...s, runId: r.id, runDate: r.startedAt }))
   );
   const fastest1k = allSplits.reduce(
     (best: SplitWithRun | null, s: SplitWithRun) =>

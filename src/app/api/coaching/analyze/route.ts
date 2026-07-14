@@ -3,6 +3,15 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generatePostRunAnalysis } from "@/lib/groq";
 
+interface AnalyzeRunRow {
+  userId: string;
+  totalDistanceM: number;
+  totalDurationS: number;
+  avgPaceSPerKm: number | null;
+  coachPersonality: string | null;
+  splits: Array<{ splitNumber: number; durationS: number; avgPaceSPerKm: number }>;
+}
+
 export async function POST(request: NextRequest) {
   if (!process.env.GROQ_API_KEY) {
     return NextResponse.json(
@@ -28,12 +37,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "runId is required" }, { status: 400 });
   }
 
-  const run = await prisma.run.findUnique({
+  const run = (await prisma.run.findUnique({
     where: { id: runId },
     include: {
       splits: { orderBy: { splitNumber: "asc" } },
     },
-  });
+  })) as AnalyzeRunRow | null;
 
   if (!run) {
     return NextResponse.json({ error: "Run not found" }, { status: 404 });
@@ -47,7 +56,7 @@ export async function POST(request: NextRequest) {
     totalDistanceM: run.totalDistanceM,
     totalDurationS: run.totalDurationS,
     avgPaceSPerKm: run.avgPaceSPerKm ?? 0,
-    splits: run.splits.map((s) => ({
+    splits: run.splits.map((s: { splitNumber: number; durationS: number; avgPaceSPerKm: number }) => ({
       splitNumber: s.splitNumber,
       durationS: s.durationS,
       avgPaceSPerKm: s.avgPaceSPerKm,

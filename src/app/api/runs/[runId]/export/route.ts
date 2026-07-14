@@ -2,6 +2,14 @@ import { type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
+interface ExportPoint {
+  latitude: number;
+  longitude: number;
+  altitude: number | null;
+  speed: number | null;
+  timestamp: Date;
+}
+
 function formatPace(secsPerKm: number | null | undefined): string {
   if (!secsPerKm || secsPerKm <= 0) return "";
   const m = Math.floor(secsPerKm / 60);
@@ -42,7 +50,7 @@ export async function GET(
 
   if (format === "gpx") {
     const trackPoints = run.points
-      .map((p) => {
+      .map((p: ExportPoint) => {
         const ele =
           p.altitude != null ? `<ele>${p.altitude.toFixed(1)}</ele>` : "";
         const time = `<time>${new Date(p.timestamp).toISOString()}</time>`;
@@ -79,7 +87,7 @@ ${trackPoints}
   if (format === "csv") {
     const header = "timestamp,latitude,longitude,altitude,speed,pace\n";
     const rows = run.points
-      .map((p) => {
+      .map((p: ExportPoint) => {
         const ts = new Date(p.timestamp).toISOString();
         const alt = p.altitude != null ? p.altitude.toFixed(1) : "";
         const spd = p.speed != null ? p.speed.toFixed(2) : "";
