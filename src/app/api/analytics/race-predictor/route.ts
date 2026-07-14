@@ -2,6 +2,12 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
+interface PaceRunRow {
+  totalDistanceM: number;
+  totalDurationS: number;
+  avgPaceSPerKm: number | null;
+}
+
 // Riegel formula: T2 = T1 × (D2 / D1)^1.06
 function riegelPredict(
   bestTimeS: number,
@@ -33,7 +39,7 @@ export async function GET() {
   const ninetyDaysAgo = new Date();
   ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
 
-  const recentRuns = await prisma.run.findMany({
+  const recentRuns = (await prisma.run.findMany({
     where: {
       userId,
       status: "completed",
@@ -48,7 +54,7 @@ export async function GET() {
     },
     orderBy: { startedAt: "desc" },
     take: 20,
-  });
+  })) as PaceRunRow[];
 
   if (recentRuns.length === 0) {
     return NextResponse.json({
@@ -59,11 +65,11 @@ export async function GET() {
 
   // Find the run with the best (lowest) pace as our reference point
   const bestRun = recentRuns.reduce(
-    (best, r) =>
+    (best: PaceRunRow | null, r: PaceRunRow) =>
       (r.avgPaceSPerKm ?? Infinity) < (best?.avgPaceSPerKm ?? Infinity)
         ? r
         : best,
-    null as (typeof recentRuns)[0] | null
+    null as PaceRunRow | null
   )!;
 
   const referenceDistanceM = bestRun.totalDistanceM;

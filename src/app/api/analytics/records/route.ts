@@ -73,8 +73,8 @@ export async function GET() {
 
   // Longest run
   const longestRun = runs.reduce(
-    (best, r) => (r.totalDistanceM > (best?.totalDistanceM ?? 0) ? r : best),
-    null as (typeof runs)[0] | null
+    (best: RecordRunRow | null, r: RecordRunRow) => (r.totalDistanceM > (best?.totalDistanceM ?? 0) ? r : best),
+    null as RecordRunRow | null
   );
   if (longestRun) {
     records.push({
@@ -91,14 +91,14 @@ export async function GET() {
   // Fastest avg pace (runs > 1km)
   const fastestPaceRun = runs
     .filter(
-      (r) => r.totalDistanceM > 1000 && r.avgPaceSPerKm && r.avgPaceSPerKm > 0
+      (r: RecordRunRow) => r.totalDistanceM > 1000 && r.avgPaceSPerKm && r.avgPaceSPerKm > 0
     )
     .reduce(
-      (best, r) =>
+      (best: RecordRunRow | null, r: RecordRunRow) =>
         (r.avgPaceSPerKm ?? Infinity) < (best?.avgPaceSPerKm ?? Infinity)
           ? r
           : best,
-      null as (typeof runs)[0] | null
+      null as RecordRunRow | null
     );
   if (fastestPaceRun?.avgPaceSPerKm) {
     records.push({
@@ -116,9 +116,9 @@ export async function GET() {
   const mostElevationRun = runs
     .filter((r: RecordRunRow) => r.elevationGainM && r.elevationGainM > 0)
     .reduce(
-      (best, r) =>
+      (best: RecordRunRow | null, r: RecordRunRow) =>
         (r.elevationGainM ?? 0) > (best?.elevationGainM ?? 0) ? r : best,
-      null as (typeof runs)[0] | null
+      null as RecordRunRow | null
     );
   if (mostElevationRun?.elevationGainM) {
     records.push({
@@ -133,7 +133,8 @@ export async function GET() {
   }
 
   // Fastest 1K split (RunSplit where distanceM ~= 1000)
-  const allSplits = runs.flatMap((r) =>
+  type SplitWithRun = RecordRunRow["splits"][0] & { runId: string; runDate: Date };
+  const allSplits: SplitWithRun[] = runs.flatMap((r: RecordRunRow) =>
     r.splits
       .filter(
         (s) =>
@@ -145,11 +146,11 @@ export async function GET() {
       .map((s) => ({ ...s, runId: r.id, runDate: r.startedAt }))
   );
   const fastest1k = allSplits.reduce(
-    (best, s) =>
+    (best: SplitWithRun | null, s: SplitWithRun) =>
       (s.avgPaceSPerKm ?? Infinity) < (best?.avgPaceSPerKm ?? Infinity)
         ? s
         : best,
-    null as (typeof allSplits)[0] | null
+    null as SplitWithRun | null
   );
   if (fastest1k?.avgPaceSPerKm) {
     records.push({
