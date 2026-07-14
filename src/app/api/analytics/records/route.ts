@@ -164,7 +164,7 @@ export async function GET() {
   } | null = null;
   for (const run of fiveKRuns) {
     const first5 = run.splits.slice(0, 5);
-    const totalDurationS = first5.reduce((s, sp) => s + sp.durationS, 0);
+    const totalDurationS = first5.reduce((s: number, sp) => s + sp.durationS, 0);
     if (
       !fastest5kEntry ||
       totalDurationS < fastest5kEntry.durationS

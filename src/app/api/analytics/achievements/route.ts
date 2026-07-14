@@ -49,7 +49,7 @@ export async function GET() {
   }
 
   const totalRuns = runs.length;
-  const totalDistanceM = runs.reduce((s, r) => s + r.totalDistanceM, 0);
+  const totalDistanceM = runs.reduce((s: number, r) => s + r.totalDistanceM, 0);
   const longestRunM = Math.max(...runs.map((r) => r.totalDistanceM));
 
   const paced = runs.filter((r) => r.avgPaceSPerKm && r.avgPaceSPerKm > 0);

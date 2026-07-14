@@ -26,11 +26,11 @@ function aggregateRuns(
   const paced = runs.filter((r) => r.avgPaceSPerKm && r.avgPaceSPerKm > 0);
   return {
     runs: runs.length,
-    distanceM: runs.reduce((s, r) => s + r.totalDistanceM, 0),
-    durationS: runs.reduce((s, r) => s + r.totalDurationS, 0),
+    distanceM: runs.reduce((s: number, r) => s + r.totalDistanceM, 0),
+    durationS: runs.reduce((s: number, r) => s + r.totalDurationS, 0),
     avgPaceSPerKm:
       paced.length > 0
-        ? paced.reduce((s, r) => s + (r.avgPaceSPerKm ?? 0), 0) / paced.length
+        ? paced.reduce((s: number, r) => s + (r.avgPaceSPerKm ?? 0), 0) / paced.length
         : null,
   };
 }

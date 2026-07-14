@@ -65,15 +65,15 @@ export async function GET(request: NextRequest) {
 
   // Aggregate stats
   const totalRuns = runs.length;
-  const totalDistanceM = runs.reduce((sum, r) => sum + r.totalDistanceM, 0);
-  const totalDurationS = runs.reduce((sum, r) => sum + r.totalDurationS, 0);
+  const totalDistanceM = runs.reduce((sum: number, r) => sum + r.totalDistanceM, 0);
+  const totalDurationS = runs.reduce((sum: number, r) => sum + r.totalDurationS, 0);
 
   const runsWithPace = runs.filter(
     (r) => r.avgPaceSPerKm !== null && r.avgPaceSPerKm > 0
   );
   const avgPaceSecsPerKm =
     runsWithPace.length > 0
-      ? runsWithPace.reduce((sum, r) => sum + (r.avgPaceSPerKm ?? 0), 0) /
+      ? runsWithPace.reduce((sum: number, r) => sum + (r.avgPaceSPerKm ?? 0), 0) /
         runsWithPace.length
       : null;
 
