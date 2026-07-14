@@ -1,0 +1,8 @@
+prisma/dev.db
+prisma/migrations
+.env
+.env.local
+README.md
+CLAUDE.md
+AGENTS.md
+.claude/
