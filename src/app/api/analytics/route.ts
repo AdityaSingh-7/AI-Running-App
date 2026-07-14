@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
+interface RunRow {
+  id: string;
+  startedAt: Date;
+  completedAt: Date | null;
+  totalDistanceM: number;
+  totalDurationS: number;
+  avgPaceSPerKm: number | null;
+  title: string | null;
+  coachPersonality: string | null;
+}
+
 type Period = "7d" | "30d" | "90d" | "all";
 
 function getPeriodStart(period: Period): Date | null {
@@ -48,7 +59,7 @@ export async function GET(request: NextRequest) {
   };
 
   // Fetch all completed runs in period for aggregation
-  const runs = await prisma.run.findMany({
+  const runs = (await prisma.run.findMany({
     where: whereClause,
     orderBy: { startedAt: "desc" },
     select: {
@@ -61,7 +72,7 @@ export async function GET(request: NextRequest) {
       title: true,
       coachPersonality: true,
     },
-  });
+  })) as RunRow[];
 
   // Aggregate stats
   const totalRuns = runs.length;

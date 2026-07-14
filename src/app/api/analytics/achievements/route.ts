@@ -8,6 +8,12 @@ import {
   type UserStats,
 } from "@/lib/achievements";
 
+interface AchRunRow {
+  startedAt: Date;
+  totalDistanceM: number;
+  avgPaceSPerKm: number | null;
+}
+
 export async function GET() {
   const session = await auth();
   if (!session?.user?.id) {
@@ -16,7 +22,7 @@ export async function GET() {
 
   const userId = session.user.id;
 
-  const runs = await prisma.run.findMany({
+  const runs = (await prisma.run.findMany({
     where: { userId, status: "completed" },
     select: {
       startedAt: true,
@@ -24,7 +30,7 @@ export async function GET() {
       avgPaceSPerKm: true,
     },
     orderBy: { startedAt: "asc" },
-  });
+  })) as AchRunRow[];
 
   if (runs.length === 0) {
     return NextResponse.json({
