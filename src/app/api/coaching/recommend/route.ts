@@ -3,6 +3,13 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateTrainingRecommendation } from "@/lib/groq";
 
+interface RecRunRow {
+  totalDistanceM: number;
+  totalDurationS: number;
+  avgPaceSPerKm: number | null;
+  startedAt: Date;
+}
+
 export async function GET() {
   if (!process.env.GROQ_API_KEY) {
     return NextResponse.json(
@@ -16,7 +23,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const recentRuns = await prisma.run.findMany({
+  const recentRuns = (await prisma.run.findMany({
     where: {
       userId: session.user.id,
       status: "completed",
@@ -29,7 +36,7 @@ export async function GET() {
       avgPaceSPerKm: true,
       startedAt: true,
     },
-  });
+  })) as RecRunRow[];
 
   if (recentRuns.length < 1) {
     return NextResponse.json({
@@ -39,7 +46,7 @@ export async function GET() {
   }
 
   const recommendation = await generateTrainingRecommendation(
-    recentRuns.map((r) => ({
+    recentRuns.map((r: RecRunRow) => ({
       totalDistanceM: r.totalDistanceM,
       totalDurationS: r.totalDurationS,
       avgPaceSPerKm: r.avgPaceSPerKm ?? 0,

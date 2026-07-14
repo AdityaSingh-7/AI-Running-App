@@ -2,6 +2,16 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
+interface RecordRunRow {
+  id: string;
+  startedAt: Date;
+  totalDistanceM: number;
+  totalDurationS: number;
+  avgPaceSPerKm: number | null;
+  elevationGainM: number | null;
+  splits: Array<{ splitNumber: number; distanceM: number; durationS: number; avgPaceSPerKm: number }>;
+}
+
 function formatPace(secondsPerKm: number): string {
   const mins = Math.floor(secondsPerKm / 60);
   const secs = Math.round(secondsPerKm % 60);
@@ -27,7 +37,7 @@ export async function GET() {
   const userId = session.user.id;
 
   // Fetch all completed runs
-  const runs = await prisma.run.findMany({
+  const runs = (await prisma.run.findMany({
     where: { userId, status: "completed" },
     select: {
       id: true,
@@ -47,7 +57,7 @@ export async function GET() {
       },
     },
     orderBy: { startedAt: "desc" },
-  });
+  })) as RecordRunRow[];
 
   type RecordEntry = {
     type: string;
@@ -104,7 +114,7 @@ export async function GET() {
 
   // Most elevation
   const mostElevationRun = runs
-    .filter((r) => r.elevationGainM && r.elevationGainM > 0)
+    .filter((r: RecordRunRow) => r.elevationGainM && r.elevationGainM > 0)
     .reduce(
       (best, r) =>
         (r.elevationGainM ?? 0) > (best?.elevationGainM ?? 0) ? r : best,

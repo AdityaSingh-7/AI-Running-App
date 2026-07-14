@@ -65,7 +65,7 @@ export async function GET() {
       : 0;
 
   const streak = calculateStreak(
-    runs.map((r) => ({ startedAt: r.startedAt.toISOString() }))
+    runs.map((r: AchRunRow) => ({ startedAt: r.startedAt.toISOString() }))
   );
 
   const stats: UserStats = {

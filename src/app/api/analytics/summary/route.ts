@@ -83,14 +83,14 @@ export async function GET() {
   thirtyDaysAgo.setDate(now.getDate() - 30);
   thirtyDaysAgo.setHours(0, 0, 0, 0);
 
-  const last30Runs = await prisma.run.findMany({
+  const last30Runs = (await prisma.run.findMany({
     where: { userId, status: "completed", startedAt: { gte: thirtyDaysAgo } },
     select: { startedAt: true },
-  });
+  })) as Array<{ startedAt: Date }>;
 
   // Count unique run days
   const runDays = new Set(
-    last30Runs.map((r) => {
+    last30Runs.map((r: { startedAt: Date }) => {
       const d = new Date(r.startedAt);
       return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
     })

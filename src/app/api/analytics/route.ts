@@ -89,11 +89,11 @@ export async function GET(request: NextRequest) {
       : null;
 
   const longestRunM =
-    runs.length > 0 ? Math.max(...runs.map((r) => r.totalDistanceM)) : 0;
+    runs.length > 0 ? Math.max(...runs.map((r: RunRow) => r.totalDistanceM)) : 0;
 
   const fastestPaceSecsPerKm =
     runsWithPace.length > 0
-      ? Math.min(...runsWithPace.map((r) => r.avgPaceSPerKm ?? Infinity))
+      ? Math.min(...runsWithPace.map((r: RunRow) => r.avgPaceSPerKm ?? Infinity))
       : null;
 
   // Group by week
@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
     .sort((a, b) => a.week.localeCompare(b.week));
 
   // Recent runs (last 5)
-  const recentRuns = runs.slice(0, 5).map((r) => ({
+  const recentRuns = runs.slice(0, 5).map((r: RunRow) => ({
     id: r.id,
     startedAt: r.startedAt,
     completedAt: r.completedAt,
