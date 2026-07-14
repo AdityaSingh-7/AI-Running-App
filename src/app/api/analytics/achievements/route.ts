@@ -55,13 +55,13 @@ export async function GET() {
   }
 
   const totalRuns = runs.length;
-  const totalDistanceM = runs.reduce((s: number, r) => s + r.totalDistanceM, 0);
-  const longestRunM = Math.max(...runs.map((r) => r.totalDistanceM));
+  const totalDistanceM = runs.reduce((s: number, r: AchRunRow) => s + r.totalDistanceM, 0);
+  const longestRunM = Math.max(...runs.map((r: AchRunRow) => r.totalDistanceM));
 
-  const paced = runs.filter((r) => r.avgPaceSPerKm && r.avgPaceSPerKm > 0);
+  const paced = runs.filter((r: AchRunRow) => r.avgPaceSPerKm && r.avgPaceSPerKm > 0);
   const fastestPaceSecsPerKm =
     paced.length > 0
-      ? Math.min(...paced.map((r) => r.avgPaceSPerKm ?? Infinity))
+      ? Math.min(...paced.map((r: AchRunRow) => r.avgPaceSPerKm ?? Infinity))
       : 0;
 
   const streak = calculateStreak(
