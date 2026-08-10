@@ -203,30 +203,27 @@ export default function DashboardPage() {
     };
   }, [period]);
 
-  // Weekly goal in km (fixed display value)
   const WEEKLY_GOAL_KM = 30;
-  const thisWeekKm = summaryData
-    ? summaryData.stats.thisWeek.distanceM / 1000
-    : 0;
+  const thisWeekKm = (summaryData?.stats?.thisWeek?.distanceM ?? 0) / 1000;
   const progressPct = Math.min(100, (thisWeekKm / WEEKLY_GOAL_KM) * 100);
 
   return (
-    <div className="flex flex-col gap-5 max-w-md mx-auto">
+    <div className="w-full text-white space-y-6">
       {/* Onboarding banner */}
       {showOnboardingBanner && (
-        <div className="rounded-2xl bg-[#FCEEE8] border border-[#F0EDEB] px-5 py-4 flex items-center justify-between gap-4">
+        <div className="rounded-2xl bg-[#141822] border border-[#FF5252]/40 p-5 flex items-center justify-between gap-4 shadow-xl">
           <div>
-            <p className="font-bold text-[#2E363B] text-sm">
-              New here? Set up your profile
+            <p className="font-extrabold text-white text-sm uppercase tracking-wide">
+              ⚡ Welcome Runner! Setup Your Profile
             </p>
-            <p className="text-xs text-[#6B7680] mt-0.5">
-              Pick your goal, choose a coach, and test your voice.
+            <p className="text-xs text-[#94A3B8] mt-1">
+              Pick your training goal, select a voice coach, and test audio.
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <Link href="/onboarding">
-              <button className="h-8 px-4 rounded-full bg-[#C15F3C] text-white font-bold text-xs hover:bg-[#9B4628] transition-colors">
-                Get Started
+              <button className="h-8 px-4 rounded-xl bg-[#FF5252] text-white font-extrabold text-xs uppercase tracking-wider hover:bg-[#E03E3E] transition-colors athletic-glow-coral">
+                Start
               </button>
             </Link>
             <button
@@ -234,7 +231,7 @@ export default function DashboardPage() {
                 localStorage.setItem("onboarding_complete", "skipped");
                 setShowOnboardingBanner(false);
               }}
-              className="text-[#6B7680] hover:text-[#2E363B] text-lg leading-none p-1"
+              className="text-[#94A3B8] hover:text-white text-xl leading-none p-1"
               aria-label="Dismiss"
             >
               ×
@@ -243,36 +240,41 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Greeting */}
-      <div className="pt-2">
-        <p className="text-[13px] font-medium uppercase tracking-widest text-[#6B7680]">
+      {/* Greeting Header */}
+      <div className="pt-1 pb-2 border-b border-white/10">
+        <p className="text-xs font-black uppercase tracking-widest text-[#FF5252] flex items-center gap-1.5">
+          <span className="size-2 rounded-full bg-[#38BDF8] animate-ping" />
           {getTodayLabel()}
         </p>
-        <h1 className="font-semibold text-[30px] text-[#2E363B] leading-tight mt-1">
-          {getGreeting()}, Runner
+        <h1 className="font-black text-3xl md:text-4xl text-white tracking-tight italic mt-1 uppercase">
+          {getGreeting()}, <span className="text-[#FF5252]">Runner</span>
         </h1>
       </div>
 
       {/* Loading skeleton */}
       {loading && (
-        <div className="space-y-4">
-          <div className="rounded-2xl bg-white shadow-sm p-6 animate-pulse">
-            <div className="h-16 w-32 bg-[#F0EDEB] rounded mb-3" />
-            <div className="h-3 w-48 bg-[#F0EDEB] rounded mb-4" />
-            <div className="h-2 w-full bg-[#F0EDEB] rounded-full" />
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <div className="md:col-span-8 rounded-2xl glass-card p-6 animate-pulse space-y-4">
+            <div className="h-16 w-32 bg-white/10 rounded" />
+            <div className="h-3 w-48 bg-white/10 rounded" />
+            <div className="h-2.5 w-full bg-white/10 rounded-full" />
+          </div>
+          <div className="md:col-span-4 rounded-2xl glass-card p-6 animate-pulse space-y-4">
+            <div className="h-12 w-full bg-white/10 rounded" />
+            <div className="h-12 w-full bg-white/10 rounded" />
           </div>
         </div>
       )}
 
       {/* Error */}
       {error && !loading && (
-        <div className="rounded-2xl bg-white shadow-sm p-6 text-center">
-          <p className="text-sm text-red-500">{error}</p>
+        <div className="rounded-2xl glass-card p-6 text-center border border-red-500/30">
+          <p className="text-sm text-red-400 font-semibold">{error}</p>
           <button
             onClick={() => setPeriod((p) => p)}
-            className="mt-3 text-sm text-[#C15F3C] font-medium"
+            className="mt-3 text-xs uppercase font-extrabold text-[#FF4500]"
           >
-            Retry
+            Retry Connection
           </button>
         </div>
       )}
@@ -280,285 +282,339 @@ export default function DashboardPage() {
       {/* Empty state */}
       {!loading && !error && data && data.totalRuns === 0 && <EmptyState />}
 
-      {/* Main content */}
+      {/* Main Responsive Grid Layout */}
       {!loading && !error && data && data.totalRuns > 0 && (
-        <>
-          {/* Weekly stats card */}
-          <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-6">
-            <div className="flex items-end justify-between">
-              <div>
-                <p
-                  className="font-black leading-none text-[#C15F3C]"
-                  style={{ fontSize: 60 }}
-                >
-                  {summaryLoading ? (
-                    <span className="inline-block h-14 w-24 bg-[#F0EDEB] rounded animate-pulse" />
-                  ) : (
-                    thisWeekKm.toFixed(1)
-                  )}
-                </p>
-                <p className="text-[13px] text-[#6B7680] mt-1">
-                  <span className="font-medium">This week</span>
-                  <span className="mx-1.5 text-[#D9D2CB]">·</span>
-                  Goal {WEEKLY_GOAL_KM} km
-                </p>
-              </div>
-              <span className="text-[13px] font-medium text-[#C15F3C] mb-1">
-                {summaryLoading ? "" : `${Math.round(progressPct)}%`}
-              </span>
-            </div>
-
-            {/* Progress bar */}
-            <div className="mt-4 h-2 w-full rounded-full bg-[#F0EDEB] overflow-hidden">
-              <div
-                className="h-full rounded-full bg-[#C15F3C] transition-all duration-500"
-                style={{ width: `${progressPct}%` }}
-              />
-            </div>
-
-            {/* 3-column stats */}
-            <div className="mt-5 grid grid-cols-3 gap-2">
-              <div>
-                <p className="text-[18px] font-bold text-[#2E363B] leading-none">
-                  {summaryData?.stats.thisWeek.runs ?? data.totalRuns}
-                </p>
-                <p className="text-[12px] uppercase tracking-wide text-[#6B7680] mt-1">Runs</p>
-              </div>
-              <div>
-                <p className="text-[18px] font-bold text-[#2E363B] leading-none">
-                  {data.avgPaceSecsPerKm != null ? formatPace(data.avgPaceSecsPerKm) : "--:--"}
-                </p>
-                <p className="text-[12px] uppercase tracking-wide text-[#6B7680] mt-1">Avg pace</p>
-              </div>
-              <div>
-                <p className="text-[18px] font-bold text-[#2E363B] leading-none">
-                  {formatDuration(
-                    summaryData?.stats.thisWeek.durationS ?? data.totalDurationS
-                  )}
-                </p>
-                <p className="text-[12px] uppercase tracking-wide text-[#6B7680] mt-1">Total time</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Start Run button */}
-          <Link href="/run" className="block">
-            <button className="w-full h-14 rounded-full bg-[#C15F3C] text-white font-bold text-base flex items-center justify-center gap-2 hover:bg-[#9B4628] transition-colors shadow-[0_2px_8px_rgba(193,95,60,0.3)]">
-              <Play className="size-5 fill-current" />
-              Start Run
-            </button>
-          </Link>
-
-          {/* Streak card */}
-          <div className="bg-[#FCEEE8] rounded-2xl p-4 flex items-center gap-4">
-            <div className="size-11 rounded-full bg-white/60 flex items-center justify-center shrink-0">
-              <Flame className="size-5 text-[#C15F3C]" />
-            </div>
-            <div className="flex-1">
-              {achievementsLoading ? (
-                <div className="h-5 w-28 bg-[#F0EDEB] rounded animate-pulse" />
-              ) : (
-                <>
-                  <p className="font-bold text-[#2E363B] text-[15px]">
-                    {achievementsData?.streak.current ?? 0}-day streak
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+          
+          {/* Left Column (Primary Focus: Volume & Activities) */}
+          <div className="md:col-span-8 space-y-6">
+            
+            {/* Weekly stats hero card */}
+            <div className="glass-card rounded-2xl p-6 relative overflow-hidden group border border-white/10 hover:border-[#FF4500]/40 transition-all shadow-2xl">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF4500]/10 rounded-full blur-3xl pointer-events-none" />
+              
+              <div className="flex items-end justify-between relative z-10">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[10px] font-black uppercase tracking-widest bg-[#FF4500]/15 text-[#FF4500] px-2.5 py-0.5 rounded-full border border-[#FF4500]/30">
+                      TELEMETRY OVERVIEW
+                    </span>
+                  </div>
+                  <p
+                    className="font-black leading-none text-[#FF4500] telemetry-mono tracking-tight"
+                    style={{ fontSize: 76 }}
+                  >
+                    {summaryLoading ? (
+                      <span className="inline-block h-16 w-32 bg-white/10 rounded animate-pulse" />
+                    ) : (
+                      thisWeekKm.toFixed(1)
+                    )}
+                    <span className="text-xl text-[#94A3B8] font-sans font-extrabold ml-2">KM</span>
                   </p>
-                  {(achievementsData?.streak.max ?? 0) > 0 && (
-                    <p className="text-[12px] text-[#6B7680] mt-0.5">
-                      Best: {achievementsData?.streak.max} days
-                    </p>
-                  )}
-                </>
+                  <p className="text-xs font-extrabold uppercase tracking-wider text-[#94A3B8] mt-2">
+                    <span>This Week Target</span>
+                    <span className="mx-2 text-white/20">|</span>
+                    Goal {WEEKLY_GOAL_KM} km
+                  </p>
+                </div>
+                <div className="text-right mb-1">
+                  <span className="text-base font-black text-[#00F2FE] telemetry-mono bg-[#00F2FE]/10 px-3 py-1.5 rounded-xl border border-[#00F2FE]/30 inline-block">
+                    {summaryLoading ? "" : `${Math.round(progressPct)}% Complete`}
+                  </span>
+                </div>
+              </div>
+
+              {/* Telemetry SVG Curve Chart */}
+              <div className="mt-6 h-20 w-full relative">
+                <svg className="w-full h-full overflow-visible" viewBox="0 0 400 80" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="telemetryGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#FF4500" stopOpacity="0.4" />
+                      <stop offset="100%" stopColor="#FF4500" stopOpacity="0.0" />
+                    </linearGradient>
+                    <linearGradient id="strokeGrad" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#FF4500" />
+                      <stop offset="100%" stopColor="#00F2FE" />
+                    </linearGradient>
+                  </defs>
+                  {/* Fill Area */}
+                  <path
+                    d="M 0 80 Q 50 40, 100 55 T 200 25 T 300 45 T 400 15 L 400 80 Z"
+                    fill="url(#telemetryGrad)"
+                  />
+                  {/* Stroke Line */}
+                  <path
+                    d="M 0 80 Q 50 40, 100 55 T 200 25 T 300 45 T 400 15"
+                    fill="none"
+                    stroke="url(#strokeGrad)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                  {/* Data Points */}
+                  <circle cx="100" cy="55" r="4" fill="#FF4500" className="animate-pulse" />
+                  <circle cx="200" cy="25" r="4" fill="#00F2FE" className="animate-pulse" />
+                  <circle cx="400" cy="15" r="5" fill="#00F2FE" className="athletic-glow-cyan" />
+                </svg>
+              </div>
+
+              {/* Progress bar */}
+              <div className="mt-4 h-2.5 w-full rounded-full bg-white/10 overflow-hidden relative">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-[#FF4500] to-[#00F2FE] transition-all duration-500 shadow-[0_0_15px_rgba(255,69,0,0.5)]"
+                  style={{ width: `${progressPct}%` }}
+                />
+              </div>
+
+              {/* 3-column stats */}
+              <div className="mt-6 grid grid-cols-3 gap-4 pt-5 border-t border-white/10">
+                <div>
+                  <p className="text-2xl font-black text-white telemetry-mono leading-none">
+                    {summaryData?.stats.thisWeek.runs ?? data.totalRuns}
+                  </p>
+                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-[#94A3B8] mt-1.5">Completed Runs</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-black text-[#00F2FE] telemetry-mono leading-none">
+                    {data.avgPaceSecsPerKm != null ? formatPace(data.avgPaceSecsPerKm) : "--:--"}
+                  </p>
+                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-[#94A3B8] mt-1.5">Avg Pace (/km)</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-black text-white telemetry-mono leading-none">
+                    {formatDuration(
+                      summaryData?.stats.thisWeek.durationS ?? data.totalDurationS
+                    )}
+                  </p>
+                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-[#94A3B8] mt-1.5">Total Time</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent runs section */}
+            <div>
+              <div className="flex items-center justify-between mb-3.5">
+                <p className="text-xs font-black uppercase tracking-widest text-[#94A3B8]">
+                  Recent Activity Log
+                </p>
+                <Link
+                  href="/history"
+                  className="text-xs font-black uppercase tracking-wider text-[#FF5252] hover:text-[#FF6B6B] flex items-center gap-1"
+                >
+                  View All History <ChevronRight className="size-4" />
+                </Link>
+              </div>
+
+              {data.recentRuns.length === 0 ? (
+                <div className="glass-card rounded-2xl p-6 text-center border border-white/10">
+                  <p className="text-sm text-[#94A3B8]">No completed runs in this period.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-3">
+                  {data.recentRuns.map((run: RecentRun) => (
+                    <Link
+                      key={run.id}
+                      href={`/history/${run.id}`}
+                      className="glass-card glass-card-hover rounded-2xl p-4.5 flex items-center justify-between gap-4"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="text-base font-extrabold text-white truncate">
+                          {run.title ?? formatRunDate(run.startedAt)}
+                        </p>
+                        <p className="text-xs font-semibold text-[#94A3B8] mt-1">
+                          {run.title ? formatRunDate(run.startedAt) : null}
+                          {run.totalDurationS > 0 && (
+                            <>
+                              {run.title ? " · " : ""}
+                              {formatDuration(run.totalDurationS)}
+                              {run.avgPaceSPerKm != null
+                                ? ` · ${formatPace(run.avgPaceSPerKm)}/km`
+                                : ""}
+                            </>
+                          )}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3 shrink-0">
+                        <div className="text-right">
+                          <p className="text-2xl font-black text-[#FF5252] font-mono leading-none">
+                            {(run.totalDistanceM / 1000).toFixed(1)}
+                          </p>
+                          <p className="text-[10px] font-extrabold text-[#94A3B8] uppercase tracking-wider mt-0.5">KM</p>
+                        </div>
+                        <ChevronRight className="size-5 text-[#94A3B8]" />
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               )}
             </div>
+
+            {/* Race Predictor & Personal Records Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Race Predictor */}
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest text-[#94A3B8] mb-3">
+                  Race Predictor
+                </p>
+                <div className="glass-card rounded-2xl p-5 border border-white/10 h-full">
+                  <RacePredictor />
+                </div>
+              </div>
+
+              {/* Personal Records */}
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest text-[#94A3B8] mb-3">
+                  Personal Records
+                </p>
+                <div className="glass-card rounded-2xl p-5 border border-white/10 h-full">
+                  <PersonalRecords />
+                </div>
+              </div>
+            </div>
+
           </div>
 
-          {/* AI Recommendation card */}
-          {(!recLoading || recommendation) && !recNoKey && (
-            <div className="bg-[#FCEEE8] rounded-2xl p-4 flex items-start gap-3">
-              <div className="size-9 rounded-full bg-white/60 flex items-center justify-center shrink-0 mt-0.5">
-                <Zap className="size-4 text-[#C15F3C]" />
+          {/* Right Column (Secondary Focus: Insights, Streaks, Achievements) */}
+          <div className="md:col-span-4 space-y-6">
+
+            {/* Streak card */}
+            <div className="glass-card rounded-2xl p-5 flex items-center gap-4 border border-[#FF5252]/20">
+              <div className="size-13 rounded-2xl bg-[#FF5252]/15 flex items-center justify-center shrink-0 border border-[#FF5252]/30 athletic-glow-coral">
+                <Flame className="size-7 text-[#FF5252]" />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[12px] font-medium uppercase tracking-widest text-[#6B7680] mb-1">
-                  Next Run
-                </p>
-                {recLoading ? (
-                  <div className="space-y-1.5 animate-pulse">
-                    <div className="h-3.5 bg-[#F0EDEB] rounded w-4/5" />
-                    <div className="h-3.5 bg-[#F0EDEB] rounded w-3/5" />
-                  </div>
+              <div className="flex-1">
+                {achievementsLoading ? (
+                  <div className="h-5 w-28 bg-white/10 rounded animate-pulse" />
                 ) : (
-                  <p className="text-sm text-[#2E363B] leading-relaxed">{recommendation}</p>
+                  <>
+                    <p className="font-black text-white text-lg tracking-wide uppercase">
+                      🔥 {achievementsData?.streak.current ?? 0}-Day Streak
+                    </p>
+                    {(achievementsData?.streak.max ?? 0) > 0 && (
+                      <p className="text-xs text-[#94A3B8] font-semibold mt-0.5">
+                        Personal Best: {achievementsData?.streak.max} Days
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             </div>
-          )}
 
-          {/* Weekly AI Summary */}
-          {!summaryLoading && summaryData?.summary && (
-            <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-5 flex items-start gap-3">
-              <div className="size-9 rounded-full bg-[#FCEEE8] flex items-center justify-center shrink-0 mt-0.5">
-                <Star className="size-4 text-[#C15F3C]" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[12px] font-medium uppercase tracking-widest text-[#6B7680] mb-1">
-                  Weekly Summary
-                </p>
-                <p className="text-sm text-[#2E363B] leading-relaxed">{summaryData.summary}</p>
-              </div>
-            </div>
-          )}
-
-          {/* Recent runs section */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-[13px] font-semibold uppercase tracking-widest text-[#6B7680]">
-                Recent Runs
-              </p>
-              <Link
-                href="/history"
-                className="text-[13px] font-medium text-[#C15F3C] hover:text-[#9B4628]"
-              >
-                See all
-              </Link>
-            </div>
-
-            {data.recentRuns.length === 0 ? (
-              <div className="rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-6 text-center">
-                <p className="text-sm text-[#6B7680]">No completed runs in this period.</p>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2">
-                {data.recentRuns.map((run: RecentRun) => (
-                  <Link
-                    key={run.id}
-                    href={`/history/${run.id}`}
-                    className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-4 flex items-center justify-between gap-3 hover:shadow-md transition-shadow"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[15px] font-semibold text-[#2E363B] truncate">
-                        {run.title ?? formatRunDate(run.startedAt)}
-                      </p>
-                      <p className="text-[13px] text-[#6B7680] mt-0.5">
-                        {run.title ? formatRunDate(run.startedAt) : null}
-                        {run.totalDurationS > 0 && (
-                          <>
-                            {run.title ? " · " : ""}
-                            {formatDuration(run.totalDurationS)}
-                            {run.avgPaceSPerKm != null
-                              ? ` · ${formatPace(run.avgPaceSPerKm)}/km`
-                              : ""}
-                          </>
-                        )}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <p className="text-[17px] font-bold text-[#2E363B]">
-                        {(run.totalDistanceM / 1000).toFixed(1)}
-                        <span className="text-[13px] font-medium text-[#6B7680] ml-0.5">km</span>
-                      </p>
-                      <ChevronRight className="size-4 text-[#6B7680]" />
-                    </div>
-                  </Link>
-                ))}
+            {/* AI Recommendation card */}
+            {(!recLoading || recommendation) && !recNoKey && (
+              <div className="glass-card rounded-2xl p-5 border border-[#38BDF8]/30 relative overflow-hidden">
+                <div className="flex items-start gap-3.5">
+                  <div className="size-10 rounded-xl bg-[#38BDF8]/15 flex items-center justify-center shrink-0 border border-[#38BDF8]/40">
+                    <Zap className="size-5 text-[#38BDF8]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] font-black uppercase tracking-widest text-[#38BDF8] mb-1">
+                      AI Coach Recommendation
+                    </p>
+                    {recLoading ? (
+                      <div className="space-y-1.5 animate-pulse">
+                        <div className="h-3.5 bg-white/10 rounded w-4/5" />
+                        <div className="h-3.5 bg-white/10 rounded w-3/5" />
+                      </div>
+                    ) : (
+                      <p className="text-xs text-white font-medium leading-relaxed">{recommendation}</p>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
-          </div>
 
-          {/* Race Predictor */}
-          <div>
-            <p className="text-[13px] font-semibold uppercase tracking-widest text-[#6B7680] mb-3">
-              Race Predictor
-            </p>
-            <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-5">
-              <RacePredictor />
-            </div>
-          </div>
-
-          {/* Personal Records */}
-          <div>
-            <p className="text-[13px] font-semibold uppercase tracking-widest text-[#6B7680] mb-3">
-              Personal Records
-            </p>
-            <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-5">
-              <PersonalRecords />
-            </div>
-          </div>
-
-          {/* Achievements */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-[13px] font-semibold uppercase tracking-widest text-[#6B7680]">
-                Achievements
-              </p>
-              {!achievementsLoading && achievementsData && (
-                <p className="text-[12px] text-[#6B7680]">
-                  {achievementsData.allAchievements.filter((a: AchievementEntry) => a.unlocked).length} /{" "}
-                  {achievementsData.allAchievements.length}
-                </p>
-              )}
-            </div>
-            <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-4">
-              {achievementsLoading ? (
-                <div className="grid grid-cols-4 gap-3">
-                  {Array.from({ length: 8 }).map((_: unknown, i: number) => (
-                    <div key={i} className="flex flex-col items-center gap-1.5 p-2 animate-pulse">
-                      <div className="size-8 rounded-full bg-[#F0EDEB]" />
-                      <div className="h-2 w-10 bg-[#F0EDEB] rounded" />
-                    </div>
-                  ))}
+            {/* Weekly AI Summary */}
+            {!summaryLoading && summaryData?.summary && (
+              <div className="glass-card rounded-2xl p-5 flex items-start gap-3.5 border border-white/10">
+                <div className="size-10 rounded-xl bg-[#FF5252]/15 flex items-center justify-center shrink-0 border border-[#FF5252]/30">
+                  <Star className="size-5 text-[#FF5252]" />
                 </div>
-              ) : (
-                <div className="grid grid-cols-4 gap-3">
-                  {achievementsData?.allAchievements.map((a: AchievementEntry) => (
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] mb-1">
+                    Weekly Insights
+                  </p>
+                  <p className="text-xs text-white font-medium leading-relaxed">{summaryData.summary}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Consistency Score Card */}
+            {!summaryLoading && summaryData && (
+              <div className="glass-card rounded-2xl p-5 flex items-center gap-4 border border-white/10">
+                <div className="size-11 rounded-xl bg-[#38BDF8]/15 flex items-center justify-center shrink-0 border border-[#38BDF8]/30">
+                  <Activity className="size-6 text-[#38BDF8]" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] mb-1">
+                    Consistency Score (30 Days)
+                  </p>
+                  <div className="flex items-baseline gap-1 mb-2">
+                    <span className="text-3xl font-black text-white font-mono leading-none">
+                      {summaryData.consistencyPct}
+                    </span>
+                    <span className="text-[#38BDF8] font-extrabold text-sm">%</span>
+                  </div>
+                  <div className="h-2.5 w-full bg-white/10 rounded-full overflow-hidden">
                     <div
-                      key={a.id}
-                      title={a.description}
-                      className={`flex flex-col items-center gap-1 p-2 rounded-xl text-center transition-all ${
-                        a.unlocked
-                          ? "bg-[#FCEEE8]"
-                          : "opacity-40 grayscale"
-                      }`}
-                    >
-                      <span className={`text-2xl leading-none ${a.unlocked ? "" : "blur-[1px]"}`}>
-                        {a.unlocked ? a.emoji : "?"}
-                      </span>
-                      <p className={`text-[10px] font-semibold uppercase tracking-wider leading-tight ${a.unlocked ? "text-[#C15F3C]" : "text-[#6B7680]"}`}>
-                        {a.unlocked ? a.name : "???"}
-                      </p>
-                    </div>
-                  ))}
+                      className="h-full bg-gradient-to-r from-[#FF5252] to-[#38BDF8] rounded-full transition-all duration-500"
+                      style={{ width: `${summaryData.consistencyPct}%` }}
+                    />
+                  </div>
                 </div>
-              )}
+              </div>
+            )}
+
+            {/* Achievements Showcase */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-black uppercase tracking-widest text-[#94A3B8]">
+                  Badges & Awards
+                </p>
+                {!achievementsLoading && achievementsData && (
+                  <p className="text-xs font-bold text-[#38BDF8] font-mono">
+                    {achievementsData.allAchievements.filter((a: AchievementEntry) => a.unlocked).length} /{" "}
+                    {achievementsData.allAchievements.length} Unlocked
+                  </p>
+                )}
+              </div>
+              <div className="glass-card rounded-2xl p-4 border border-white/10">
+                {achievementsLoading ? (
+                  <div className="grid grid-cols-4 gap-3">
+                    {Array.from({ length: 8 }).map((_: unknown, i: number) => (
+                      <div key={i} className="flex flex-col items-center gap-1.5 p-2 animate-pulse">
+                        <div className="size-8 rounded-full bg-white/10" />
+                        <div className="h-2 w-10 bg-white/10 rounded" />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-4 gap-2.5">
+                    {achievementsData?.allAchievements.map((a: AchievementEntry) => (
+                      <div
+                        key={a.id}
+                        title={a.description}
+                        className={`flex flex-col items-center gap-1 p-2 rounded-xl text-center transition-all ${
+                          a.unlocked
+                            ? "bg-[#FF5252]/15 border border-[#FF5252]/30"
+                            : "opacity-30 grayscale border border-white/5"
+                        }`}
+                      >
+                        <span className={`text-2xl leading-none ${a.unlocked ? "" : "blur-[1px]"}`}>
+                          {a.unlocked ? a.emoji : "🔒"}
+                        </span>
+                        <p className={`text-[9px] font-extrabold uppercase tracking-wider leading-tight ${a.unlocked ? "text-white" : "text-[#94A3B8]"}`}>
+                          {a.unlocked ? a.name : "Locked"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
+
           </div>
 
-          {/* Consistency */}
-          {!summaryLoading && summaryData && (
-            <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-5 flex items-center gap-4">
-              <div className="size-10 rounded-full bg-[#FCEEE8] flex items-center justify-center shrink-0">
-                <Activity className="size-5 text-[#C15F3C]" />
-              </div>
-              <div className="flex-1">
-                <p className="text-[12px] uppercase tracking-widest text-[#6B7680] font-medium mb-1">
-                  Consistency (30d)
-                </p>
-                <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-[28px] font-black text-[#2E363B] leading-none">
-                    {summaryData.consistencyPct}
-                  </span>
-                  <span className="text-[#6B7680] font-medium">%</span>
-                </div>
-                <div className="h-2 w-full bg-[#F0EDEB] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-[#C15F3C] rounded-full transition-all duration-500"
-                    style={{ width: `${summaryData.consistencyPct}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-        </>
+        </div>
       )}
     </div>
   );

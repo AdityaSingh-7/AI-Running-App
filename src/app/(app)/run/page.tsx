@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Play } from "lucide-react";
+import { Play, Zap, ShieldAlert, Volume2, Sparkles, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { getCustomCoach, createCustomCoach } from "@/lib/coaching-personalities";
@@ -14,10 +14,10 @@ const coaches = [
     name: "Blaze",
     tagline: "Your hype crew in your ear",
     style: "Motivational",
-    color: "#E85D2B",
-    bgColor: "#FEF0E6",
+    color: "#FF5252",
     description:
       "High energy, constant encouragement, and relentless positivity. Blaze cheers you through every kilometer and will not let you quit.",
+    sampleQuote: "“Push through this hill! Your legs are stronger than you think!”",
   },
   {
     id: "coach-data",
@@ -25,10 +25,10 @@ const coaches = [
     name: "Metric",
     tagline: "Precision-guided performance",
     style: "Analytical",
-    color: "#2E7D6F",
-    bgColor: "#E8F5F0",
+    color: "#38BDF8",
     description:
       "Data-driven coaching focused on splits, pacing strategy, and efficiency. Metric gives you precise targets to systematically improve.",
+    sampleQuote: "“Current pace is 5:12/km. Ease up 4 seconds to maintain Zone 2.”",
   },
   {
     id: "sergeant-steel",
@@ -36,10 +36,10 @@ const coaches = [
     name: "Commander",
     tagline: "No excuses. Just results.",
     style: "Drill Sergeant",
-    color: "#4A4A4A",
-    bgColor: "#F0F0F0",
+    color: "#F59E0B",
     description:
       "Tough love and zero tolerance for slacking. Commander pushes you past your comfort zone and demands your best every time.",
+    sampleQuote: "“Pick up those feet! Champions don't slow down on final laps!”",
   },
 ];
 
@@ -52,7 +52,7 @@ interface RecoveryData {
 }
 
 export default function RunSetupPage() {
-  const [selectedCoach, setSelectedCoach] = useState<string | null>(null);
+  const [selectedCoach, setSelectedCoach] = useState<string | null>("coach-mo");
   const [recovery, setRecovery] = useState<RecoveryData | null>(null);
   const [showCustom, setShowCustom] = useState(false);
   const [customName, setCustomName] = useState("");
@@ -76,236 +76,267 @@ export default function RunSetupPage() {
       .catch(() => null);
   }, []);
 
-  // Only show the recovery card when there was a recent run (not "any")
-  const showRecoveryCard =
-    recovery !== null && recovery.intensity !== "any";
+  const activeCoachObj = coaches.find((c: typeof coaches[number]) => c.id === selectedCoach);
 
   return (
-    <div className="flex flex-col gap-6 max-w-2xl mx-auto pb-32" style={{ backgroundColor: "#FAF7F4", minHeight: "100%" }}>
+    <div className="w-full text-white space-y-6 pb-28 md:pb-12">
       {/* Header */}
-      <div className="pt-2 pb-1">
-        <h1 className="text-2xl font-bold text-[#2E363B] mb-1" style={{ fontFamily: "Georgia, serif" }}>
-          Choose your coach
+      <div className="border-b border-white/10 pb-4 pt-1">
+        <p className="text-xs font-black uppercase tracking-widest text-[#FF5252]">
+          SESSION PRE-FLIGHT
+        </p>
+        <h1 className="text-3xl md:text-4xl font-black text-white uppercase italic tracking-tight mt-1">
+          SELECT YOUR <span className="text-[#FF5252]">AI COACH</span>
         </h1>
-        <p className="text-sm text-[#6B7680]">
-          Pick the coaching style that matches your mood today.
+        <p className="text-xs text-[#94A3B8] font-semibold mt-1">
+          Choose an AI voice personality tailored for your run intensity today.
         </p>
       </div>
 
-      {/* Recovery advice card — shown above coach selector when recent hard run */}
-      {showRecoveryCard && recovery && (
-        <div className="rounded-2xl border border-[#F5C5A3] p-4 flex flex-col gap-2" style={{ backgroundColor: "#FEF0E6" }}>
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-[#C15F3C]">
-              Recovery Status
-            </span>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full border border-[#F5C5A3] text-[#C15F3C]" style={{ backgroundColor: "#FDE3D0" }}>
-              {recovery.intensity === "hard"
-                ? "Hard — Take It Easy"
-                : recovery.intensity === "moderate"
-                ? "Moderate"
-                : "Easy Day"}
-            </span>
-          </div>
-          <p className="text-sm font-medium leading-relaxed text-[#2E363B]">{recovery.advice}</p>
-          <div className="flex flex-wrap gap-3 text-xs text-[#6B7680] mt-1">
-            {recovery.lastRunSummary && (
-              <span>Last run: {recovery.lastRunSummary}</span>
-            )}
-            {recovery.suggestedPace && (
-              <span className="font-semibold text-[#C15F3C]">
-                Suggested pace: {recovery.suggestedPace}/km
-              </span>
-            )}
-          </div>
-        </div>
-      )}
+      {/* Main Responsive Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+        
+        {/* Left Column (Coach Persona Cards Grid) */}
+        <div className="md:col-span-7 space-y-4">
+          <p className="text-xs font-black uppercase tracking-widest text-[#94A3B8]">
+            Available Coach Personas
+          </p>
 
-      {/* Coach cards */}
-      <div className="flex flex-col gap-3">
-        {coaches.map((coach: typeof coaches[number]) => {
-          const isSelected = selectedCoach === coach.id;
-          return (
+          <div className="grid grid-cols-1 gap-4">
+            {coaches.map((coach: typeof coaches[number]) => {
+              const isSelected = selectedCoach === coach.id;
+              return (
+                <button
+                  key={coach.id}
+                  onClick={() => setSelectedCoach(coach.id)}
+                  className={cn(
+                    "w-full text-left rounded-2xl glass-card p-5 transition-all cursor-pointer relative overflow-hidden group border",
+                    isSelected
+                      ? "border-[#FF5252] bg-[#FF5252]/10 athletic-glow-coral shadow-2xl"
+                      : "border-white/10 hover:border-white/20 hover:bg-white/5"
+                  )}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="size-14 rounded-2xl flex items-center justify-center shrink-0 text-2xl font-black shadow-md border"
+                      style={{
+                        backgroundColor: isSelected ? "#FF5252" : "rgba(255,255,255,0.05)",
+                        color: "#FFFFFF",
+                        borderColor: isSelected ? "#FF5252" : "rgba(255,255,255,0.1)",
+                      }}
+                    >
+                      {coach.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-black text-lg tracking-tight uppercase" style={{ color: isSelected ? "#FF5252" : "#FFFFFF" }}>
+                            {coach.name}
+                          </h3>
+                          <span
+                            className="text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border"
+                            style={{
+                              backgroundColor: isSelected ? "rgba(255,82,82,0.2)" : "rgba(255,255,255,0.05)",
+                              color: isSelected ? "#FF5252" : "#94A3B8",
+                              borderColor: isSelected ? "rgba(255,82,82,0.4)" : "rgba(255,255,255,0.1)",
+                            }}
+                          >
+                            {coach.style}
+                          </span>
+                        </div>
+                        {isSelected && (
+                          <div className="size-6 rounded-full bg-[#FF5252] flex items-center justify-center text-white shrink-0">
+                            <Check className="size-3.5 stroke-[3]" />
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-xs font-extrabold uppercase tracking-wider mb-1.5 text-[#38BDF8]">
+                        {coach.tagline}
+                      </p>
+                      <p className="text-xs leading-relaxed text-[#94A3B8] mb-2">
+                        {coach.description}
+                      </p>
+                      <p className="text-[11px] italic text-white/70 bg-white/5 p-2 rounded-xl border border-white/5">
+                        {coach.sampleQuote}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+
+            {/* Custom coach option */}
             <button
-              key={coach.id}
-              onClick={() => setSelectedCoach(coach.id)}
+              onClick={() => {
+                if (customCoach) {
+                  setSelectedCoach("custom");
+                  setShowCustom(false);
+                } else {
+                  setShowCustom(!showCustom);
+                  setSelectedCoach(null);
+                }
+              }}
               className={cn(
-                "w-full text-left rounded-2xl border p-5 transition-all cursor-pointer",
-                isSelected
-                  ? "border-transparent ring-2 shadow-md"
-                  : "border-[#F0EDEB] bg-white hover:shadow-md"
+                "w-full text-left rounded-2xl glass-card border-2 border-dashed p-5 transition-all cursor-pointer",
+                selectedCoach === "custom"
+                  ? "border-[#FF5252] bg-[#FF5252]/10"
+                  : "border-white/20 hover:border-[#FF5252]/40"
               )}
-              style={isSelected ? {
-                backgroundColor: coach.bgColor,
-                boxShadow: `0 4px 14px ${coach.color}22`,
-                outline: `2px solid ${coach.color}`,
-                outlineOffset: "-1px",
-              } : undefined}
             >
               <div className="flex items-start gap-4">
-                {/* Themed icon circle */}
                 <div
-                  className="size-12 rounded-xl flex items-center justify-center shrink-0 text-lg font-bold"
+                  className="size-14 rounded-2xl flex items-center justify-center shrink-0 text-xl font-bold border"
                   style={{
-                    backgroundColor: isSelected ? coach.color : coach.bgColor,
-                    color: isSelected ? "#FFFFFF" : coach.color,
+                    backgroundColor: selectedCoach === "custom" ? "#FF5252" : "rgba(255,255,255,0.05)",
+                    color: "#FFFFFF",
+                    borderColor: selectedCoach === "custom" ? "#FF5252" : "rgba(255,255,255,0.1)",
                   }}
                 >
-                  {coach.icon}
+                  +
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <h3 className="font-bold text-base" style={{ color: isSelected ? coach.color : "#2E363B" }}>
-                      {coach.name}
+                    <h3 className="font-black text-lg tracking-tight uppercase text-white">
+                      {customCoach ? customCoach.name : "Create Custom Coach"}
                     </h3>
-                    <span
-                      className="text-xs font-medium px-2 py-0.5 rounded-full"
-                      style={{
-                        backgroundColor: isSelected ? `${coach.color}15` : "#F5F2EF",
-                        color: isSelected ? coach.color : "#6B7680",
-                      }}
-                    >
-                      {coach.style}
+                    <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[#94A3B8]">
+                      Custom Persona
                     </span>
                   </div>
-                  <p className="text-sm font-medium mb-1" style={{ color: isSelected ? coach.color : "#6B7680" }}>
-                    {coach.tagline}
-                  </p>
-                  <p className="text-sm leading-relaxed text-[#6B7680]">
-                    {coach.description}
+                  <p className="text-xs text-[#94A3B8]">
+                    {customCoach ? "Your custom AI coaching persona active" : "Define your own coach's personality and communication style"}
                   </p>
                 </div>
               </div>
             </button>
-          );
-        })}
 
-        {/* Custom coach option */}
-        <button
-          onClick={() => {
-            if (customCoach) {
-              setSelectedCoach("custom");
-              setShowCustom(false);
-            } else {
-              setShowCustom(!showCustom);
-              setSelectedCoach(null);
-            }
-          }}
-          className={cn(
-            "w-full text-left rounded-2xl border-2 border-dashed p-5 transition-all cursor-pointer",
-            selectedCoach === "custom"
-              ? "border-[#C15F3C] bg-[#FCEEE8]"
-              : "border-[#D9D2CB] bg-white hover:border-[#C15F3C]/40"
-          )}
-        >
-          <div className="flex items-start gap-4">
-            <div
-              className="size-12 rounded-xl flex items-center justify-center shrink-0 text-lg font-bold"
-              style={{
-                backgroundColor: selectedCoach === "custom" ? "#C15F3C" : "#FCEEE8",
-                color: selectedCoach === "custom" ? "#FFFFFF" : "#C15F3C",
-              }}
-            >
-              +
+            {/* Custom coach form */}
+            {showCustom && !customCoach && (
+              <div className="rounded-2xl glass-card border border-white/10 p-5 flex flex-col gap-4">
+                <div>
+                  <label className="text-xs font-black uppercase tracking-widest text-[#94A3B8] block mb-1.5">
+                    Coach Name
+                  </label>
+                  <Input
+                    value={customName}
+                    onChange={(e) => setCustomName(e.target.value)}
+                    placeholder="e.g. Zen, Tempo, Captain..."
+                    className="border-white/10 bg-white/5 focus:border-[#FF5252] rounded-xl text-white placeholder:text-white/30"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-black uppercase tracking-widest text-[#94A3B8] block mb-1.5">
+                    System Persona Prompt
+                  </label>
+                  <textarea
+                    value={customPrompt}
+                    onChange={(e) => setCustomPrompt(e.target.value)}
+                    placeholder="Describe how your coach should speak during runs..."
+                    rows={4}
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#FF5252] focus:outline-none resize-none placeholder:text-white/30"
+                  />
+                </div>
+                <button
+                  onClick={() => {
+                    if (customName.trim() && customPrompt.trim()) {
+                      createCustomCoach(customName.trim(), customPrompt.trim());
+                      setCustomCoach({ name: customName.trim(), prompt: customPrompt.trim() });
+                      setSelectedCoach("custom");
+                      setShowCustom(false);
+                    }
+                  }}
+                  disabled={!customName.trim() || !customPrompt.trim()}
+                  className="w-full h-12 rounded-xl font-black text-xs uppercase tracking-wider text-white bg-[#FF5252] hover:bg-[#E03E3E] transition-all disabled:opacity-40 athletic-glow-coral"
+                >
+                  Create Coach
+                </button>
+              </div>
+            )}
+          </div>
+
+        </div>
+
+        {/* Right Column (Pre-Flight Control Panel & Start CTA) */}
+        <div className="md:col-span-5 space-y-6 sticky top-20">
+          <p className="text-xs font-black uppercase tracking-widest text-[#94A3B8]">
+            Pre-Flight Summary
+          </p>
+
+          {/* Selected Coach Box */}
+          <div className="glass-card rounded-2xl p-6 border border-[#FF5252]/30 relative overflow-hidden">
+            <div className="absolute top-0 right-0 size-32 bg-[#FF5252]/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="flex items-center gap-3 mb-3">
+              <span className="size-10 rounded-xl bg-[#FF5252] flex items-center justify-center text-xl text-white font-black athletic-glow-coral">
+                {selectedCoach === "custom" ? "⚡" : activeCoachObj?.icon ?? "⚡"}
+              </span>
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest text-[#FF5252]">Active Voice Coach</p>
+                <p className="text-xl font-black text-white uppercase">
+                  {selectedCoach === "custom"
+                    ? customCoach?.name ?? "Custom Coach"
+                    : activeCoachObj?.name ?? "Select Coach"}
+                </p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap mb-1">
-                <h3 className="font-bold text-base text-[#2E363B]">
-                  {customCoach ? customCoach.name : "Create Your Own"}
-                </h3>
-                <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-[#F5F2EF] text-[#6B7680]">
-                  Custom
+            {activeCoachObj && (
+              <p className="text-xs text-[#94A3B8] italic border-t border-white/10 pt-3 mt-3">
+                {activeCoachObj.sampleQuote}
+              </p>
+            )}
+          </div>
+
+          {/* Recovery advice card */}
+          {recovery && (
+            <div className="glass-card rounded-2xl p-5 border border-[#38BDF8]/30 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black uppercase tracking-wider text-[#38BDF8] flex items-center gap-1.5">
+                  <Zap className="size-4" /> Recovery Status
+                </span>
+                <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-[#38BDF8]/40 text-[#38BDF8] bg-[#38BDF8]/10">
+                  {recovery.intensity}
                 </span>
               </div>
-              <p className="text-sm text-[#6B7680]">
-                {customCoach ? "Your custom AI coach" : "Define your own coaching personality with a custom prompt"}
-              </p>
+              <p className="text-xs text-white font-medium leading-relaxed">{recovery.advice}</p>
+              {recovery.suggestedPace && (
+                <p className="text-xs font-extrabold text-[#FF5252] font-mono">
+                  Target pace: {recovery.suggestedPace}/km
+                </p>
+              )}
             </div>
-          </div>
-        </button>
-
-        {/* Custom coach form */}
-        {showCustom && !customCoach && (
-          <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-5 flex flex-col gap-4">
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-[#6B7680] block mb-1.5">
-                Coach Name
-              </label>
-              <Input
-                value={customName}
-                onChange={(e) => setCustomName(e.target.value)}
-                placeholder="e.g., Zen, Spark, Captain..."
-                className="border-gray-200 focus:border-[#C15F3C] rounded-xl"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-[#6B7680] block mb-1.5">
-                Coaching Style Prompt
-              </label>
-              <textarea
-                value={customPrompt}
-                onChange={(e) => setCustomPrompt(e.target.value)}
-                placeholder="Describe how your coach should talk. e.g., 'Be calm and zen-like. Use mindfulness metaphors. Focus on breathing and form.'"
-                rows={4}
-                className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-[#C15F3C] focus:outline-none resize-none"
-              />
-            </div>
-            <button
-              onClick={() => {
-                if (customName.trim() && customPrompt.trim()) {
-                  createCustomCoach(customName.trim(), customPrompt.trim());
-                  setCustomCoach({ name: customName.trim(), prompt: customPrompt.trim() });
-                  setSelectedCoach("custom");
-                  setShowCustom(false);
-                }
-              }}
-              disabled={!customName.trim() || !customPrompt.trim()}
-              className="w-full h-11 rounded-full font-semibold text-sm text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{ backgroundColor: "#C15F3C" }}
-            >
-              Create Coach
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Start run button — fixed above tab bar on mobile, above content on desktop */}
-      <div
-        className="fixed bottom-[80px] md:bottom-0 left-0 right-0 z-40 px-4 py-4"
-        style={{ backgroundColor: "rgba(255,255,255,0.95)", backdropFilter: "blur(8px)", borderTop: "1px solid #EDE8E3" }}
-      >
-        <div className="max-w-2xl mx-auto">
-          {selectedCoach ? (
-            <div className="flex items-center gap-3 mb-3">
-              <div
-                className="size-8 rounded-lg flex items-center justify-center text-sm font-bold text-white"
-                style={{ backgroundColor: coaches.find((c: typeof coaches[number]) => c.id === selectedCoach)?.color ?? "#C15F3C" }}
-              >
-                {coaches.find((c: typeof coaches[number]) => c.id === selectedCoach)?.icon ?? "✨"}
-              </div>
-              <p className="text-sm font-semibold text-[#2E363B]">
-                {selectedCoach === "custom"
-                  ? customCoach?.name ?? "Custom coach"
-                  : coaches.find((c: typeof coaches[number]) => c.id === selectedCoach)?.name} is ready
-              </p>
-            </div>
-          ) : (
-            <p className="text-sm text-[#6B7680] mb-3">Select a coach to continue</p>
           )}
+
+          {/* Pre-Run Checks */}
+          <div className="glass-card rounded-2xl p-5 border border-white/10 space-y-3">
+            <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8]">
+              System Checks
+            </p>
+            <div className="flex items-center justify-between text-xs font-semibold">
+              <span className="flex items-center gap-2 text-white">
+                <Volume2 className="size-4 text-[#38BDF8]" /> Audio Voice Engine
+              </span>
+              <span className="text-emerald-400 font-bold">READY</span>
+            </div>
+            <div className="flex items-center justify-between text-xs font-semibold">
+              <span className="flex items-center gap-2 text-white">
+                <Sparkles className="size-4 text-[#FF5252]" /> Live GPS Tracking
+              </span>
+              <span className="text-emerald-400 font-bold">ACTIVE</span>
+            </div>
+          </div>
+
+          {/* Desktop Start Run CTA */}
           <Link href={selectedCoach ? `/run/active?coach=${selectedCoach}` : "#"}>
             <button
               disabled={!selectedCoach}
-              className="w-full h-14 rounded-full font-bold text-lg text-white flex items-center justify-center gap-2 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-              style={{
-                backgroundColor: selectedCoach ? "#C15F3C" : "#A0A0A0",
-                boxShadow: selectedCoach ? "0 4px 14px rgba(193,95,60,0.4)" : "none",
-              }}
+              className="w-full h-16 rounded-2xl font-black text-lg uppercase tracking-wider text-white flex items-center justify-center gap-3 transition-all disabled:opacity-30 disabled:cursor-not-allowed bg-[#FF5252] hover:bg-[#E03E3E] athletic-glow-coral active:scale-98 shadow-2xl"
             >
-              <Play className="size-5 fill-current" />
-              Start Run →
+              <Play className="size-6 fill-current" />
+              START RUN NOW
             </button>
           </Link>
+
         </div>
+
       </div>
     </div>
   );

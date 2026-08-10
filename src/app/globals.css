@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-outfit), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-mono), monospace;
+  --font-heading: var(--font-outfit), sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,81 +49,68 @@
 }
 
 :root {
-  /* Warm cream base */
-  --background: #FDF8F4;
-  --foreground: #2E363B;
-  --card: #FFFFFF;
-  --card-foreground: #2E363B;
-  --popover: #FFFFFF;
-  --popover-foreground: #2E363B;
-  /* Primary — sienna/terracotta */
-  --primary: #C15F3C;
+  /* Editorial Athletic OLED Obsidian Base */
+  --background: #06080D;
+  --foreground: #F8FAFC;
+  --card: #0E121B;
+  --card-foreground: #F8FAFC;
+  --popover: #0E121B;
+  --popover-foreground: #F8FAFC;
+  /* Primary — High Voltage Coral/Orange */
+  --primary: #FF4500;
   --primary-foreground: #FFFFFF;
-  /* Secondary — warm off-white */
-  --secondary: #F0EDEB;
-  --secondary-foreground: #2E363B;
+  /* Secondary — Deep Charcoal Slate */
+  --secondary: #161C28;
+  --secondary-foreground: #F8FAFC;
   /* Muted */
-  --muted: #F5F2EF;
-  --muted-foreground: #6B7680;
-  /* Accent — soft peach */
-  --accent: #FCEEE8;
-  --accent-foreground: #9B4628;
+  --muted: #121722;
+  --muted-foreground: #94A3B8;
+  /* Accent — Electric Telemetry Cyan */
+  --accent: #00F2FE;
+  --accent-foreground: #06080D;
   /* Destructive */
-  --destructive: #DC3545;
+  --destructive: #FF3B30;
   /* Borders & inputs */
-  --border: #F0EDEB;
-  --input: #F0EDEB;
-  --ring: #C15F3C;
-  /* Charts — warm scale */
-  --chart-1: #C15F3C;
-  --chart-2: #E07A55;
-  --chart-3: #B8CFC4;
-  --chart-4: #D4E5DD;
-  --chart-5: #FCEEE8;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #FF4500;
+  /* Charts */
+  --chart-1: #FF4500;
+  --chart-2: #00F2FE;
+  --chart-3: #10B981;
+  --chart-4: #F59E0B;
+  --chart-5: #8B5CF6;
   --radius: 1rem;
   /* Sidebar */
-  --sidebar: #F5F2EF;
-  --sidebar-foreground: #2E363B;
-  --sidebar-primary: #C15F3C;
+  --sidebar: #090C14;
+  --sidebar-foreground: #F8FAFC;
+  --sidebar-primary: #FF4500;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #FCEEE8;
-  --sidebar-accent-foreground: #9B4628;
-  --sidebar-border: #F0EDEB;
-  --sidebar-ring: #C15F3C;
+  --sidebar-accent: #161C28;
+  --sidebar-accent-foreground: #FF4500;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #FF4500;
 }
 
 .dark {
-  --background: #1A1D1F;
-  --foreground: #F5F2EF;
-  --card: #242729;
-  --card-foreground: #F5F2EF;
-  --popover: #242729;
-  --popover-foreground: #F5F2EF;
-  --primary: #E07A55;
-  --primary-foreground: #1A1D1F;
-  --secondary: #2A2D30;
-  --secondary-foreground: #F5F2EF;
-  --muted: #2A2D30;
-  --muted-foreground: #8E9BA2;
-  --accent: #3D2820;
-  --accent-foreground: #E07A55;
-  --destructive: #FF453A;
-  --border: #2F3336;
-  --input: #2F3336;
-  --ring: #E07A55;
-  --chart-1: #E07A55;
-  --chart-2: #C15F3C;
-  --chart-3: #6B8C7F;
-  --chart-4: #4A6B5F;
-  --chart-5: #2A2D30;
-  --sidebar: #242729;
-  --sidebar-foreground: #F5F2EF;
-  --sidebar-primary: #E07A55;
-  --sidebar-primary-foreground: #1A1D1F;
-  --sidebar-accent: #3D2820;
-  --sidebar-accent-foreground: #E07A55;
-  --sidebar-border: #2F3336;
-  --sidebar-ring: #E07A55;
+  --background: #06080D;
+  --foreground: #F8FAFC;
+  --card: #0E121B;
+  --card-foreground: #F8FAFC;
+  --popover: #0E121B;
+  --popover-foreground: #F8FAFC;
+  --primary: #FF4500;
+  --primary-foreground: #FFFFFF;
+  --secondary: #161C28;
+  --secondary-foreground: #F8FAFC;
+  --muted: #121722;
+  --muted-foreground: #94A3B8;
+  --accent: #00F2FE;
+  --accent-foreground: #06080D;
+  --destructive: #FF3B30;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #FF4500;
 }
 
 @layer base {
@@ -131,9 +118,61 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased selection:bg-[#FF4500] selection:text-white font-sans;
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(255, 69, 0, 0.05) 0%, transparent 60%),
+      radial-gradient(circle at 100% 100%, rgba(0, 242, 254, 0.04) 0%, transparent 50%);
   }
   html {
-    @apply font-sans;
+    font-family: var(--font-outfit), system-ui, -apple-system, sans-serif;
   }
+}
+
+/* Editorial Athletic Utilities */
+.athletic-glow-coral {
+  box-shadow: 0 0 25px rgba(255, 69, 0, 0.35);
+}
+
+.athletic-glow-cyan {
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.3);
+}
+
+.glass-card {
+  background: rgba(14, 18, 27, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-card-hover:hover {
+  border-color: rgba(255, 69, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.telemetry-mono {
+  font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.96);
+    box-shadow: 0 0 0 0 rgba(255, 69, 0, 0.6);
+  }
+  70% {
+    transform: scale(1.04);
+    box-shadow: 0 0 0 14px rgba(255, 69, 0, 0);
+  }
+  100% {
+    transform: scale(0.96);
+    box-shadow: 0 0 0 0 rgba(255, 69, 0, 0);
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2.2s infinite ease-in-out;
 }

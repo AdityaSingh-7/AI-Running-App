@@ -23,36 +23,29 @@ async function signInWithGitHub() {
 export default function LoginPage() {
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 py-12"
-      style={{ background: "#FDF8F4" }}
+      className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#0B0E14] text-[#F8FAFC]"
     >
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <span className="font-bold text-xl" style={{ color: "#2E363B" }}>
-              RunCoach
+          <Link href="/" className="inline-flex items-center gap-2.5 font-black text-2xl tracking-tight italic text-white">
+            <span className="flex items-center justify-center size-9 rounded-xl bg-[#FF4500] text-white font-black not-italic text-base athletic-glow-coral">
+              ⚡
             </span>
+            <span>KADENCE<span className="text-[#FF4500]">.AI</span></span>
           </Link>
-          <p className="text-sm mt-1" style={{ color: "#6B7680" }}>
+          <p className="text-xs font-extrabold uppercase tracking-widest text-[#94A3B8] mt-2">
             Welcome back, runner
           </p>
         </div>
 
-        <div
-          className="rounded-2xl p-8"
-          style={{
-            background: "#FFFFFF",
-            boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
-            border: "1px solid #F0EDEB",
-          }}
-        >
+        <div className="rounded-2xl glass-card p-8 border border-white/10 shadow-2xl">
           <div className="mb-6">
-            <h1 className="font-bold text-xl" style={{ color: "#2E363B" }}>
-              Sign in
+            <h1 className="font-black text-2xl uppercase tracking-tight text-white italic">
+              SIGN IN
             </h1>
-            <p className="text-sm mt-1" style={{ color: "#6B7680" }}>
-              Sign in to your account to continue
+            <p className="text-xs font-semibold text-[#94A3B8] mt-1">
+              Enter your runner credentials to continue
             </p>
           </div>
 
@@ -61,24 +54,19 @@ export default function LoginPage() {
             <form action={signInWithGitHub}>
               <button
                 type="submit"
-                className="w-full h-11 flex items-center justify-center gap-2 font-medium text-sm transition-colors rounded-full"
-                style={{
-                  border: "1.5px solid #F0EDEB",
-                  background: "#FFFFFF",
-                  color: "#2E363B",
-                }}
+                className="w-full h-12 flex items-center justify-center gap-2.5 font-extrabold text-xs uppercase tracking-wider transition-all rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-white"
               >
                 <GitHubIcon />
                 Sign in with GitHub
               </button>
             </form>
 
-            <div className="flex items-center gap-3">
-              <div className="flex-1 h-px" style={{ background: "#F0EDEB" }} />
-              <span className="text-xs font-medium" style={{ color: "#6B7680" }}>
-                or
+            <div className="flex items-center gap-3 my-1">
+              <div className="flex-1 h-px bg-white/10" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#94A3B8]">
+                OR
               </span>
-              <div className="flex-1 h-px" style={{ background: "#F0EDEB" }} />
+              <div className="flex-1 h-px bg-white/10" />
             </div>
 
             {/* Email / Password form */}
@@ -86,24 +74,18 @@ export default function LoginPage() {
               <div className="flex flex-col gap-1.5">
                 <Label
                   htmlFor="email"
-                  className="text-xs font-semibold"
-                  style={{ color: "#2E363B" }}
+                  className="text-xs font-black uppercase tracking-wider text-[#94A3B8]"
                 >
-                  Email
+                  Email Address
                 </Label>
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="runner@example.com"
                   required
                   autoComplete="email"
-                  className="h-11 rounded-xl text-sm"
-                  style={{
-                    border: "1.5px solid #F0EDEB",
-                    background: "#F5F2EF",
-                    color: "#2E363B",
-                  }}
+                  className="h-12 rounded-xl text-xs bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[#FF5252]"
                 />
               </div>
 
@@ -111,17 +93,15 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between">
                   <Label
                     htmlFor="password"
-                    className="text-xs font-semibold"
-                    style={{ color: "#2E363B" }}
+                    className="text-xs font-black uppercase tracking-wider text-[#94A3B8]"
                   >
                     Password
                   </Label>
                   <Link
                     href="/forgot-password"
-                    className="text-xs font-medium hover:underline"
-                    style={{ color: "#C15F3C" }}
+                    className="text-xs font-extrabold text-[#FF5252] hover:underline uppercase tracking-wider"
                   >
-                    Forgot password?
+                    Forgot?
                   </Link>
                 </div>
                 <Input
@@ -131,33 +111,26 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   required
                   autoComplete="current-password"
-                  className="h-11 rounded-xl text-sm"
-                  style={{
-                    border: "1.5px solid #F0EDEB",
-                    background: "#F5F2EF",
-                    color: "#2E363B",
-                  }}
+                  className="h-12 rounded-xl text-xs bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[#FF5252]"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full h-12 font-semibold text-white text-sm transition-colors mt-1 rounded-full"
-                style={{ background: "#C15F3C" }}
+                className="w-full h-13 font-black text-xs uppercase tracking-wider text-white transition-all mt-2 rounded-xl bg-[#FF5252] hover:bg-[#E03E3E] athletic-glow-coral active:scale-95 shadow-xl"
               >
-                Sign In
+                SIGN IN
               </button>
             </form>
           </div>
 
-          <div className="mt-6 text-center text-sm" style={{ color: "#6B7680" }}>
+          <div className="mt-6 text-center text-xs font-semibold text-[#94A3B8]">
             Don&apos;t have an account?&nbsp;
             <Link
               href="/register"
-              className="font-semibold hover:underline"
-              style={{ color: "#C15F3C" }}
+              className="font-extrabold text-[#FF5252] hover:underline uppercase tracking-wider"
             >
-              Create one
+              Register Now
             </Link>
           </div>
         </div>

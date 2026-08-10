@@ -20,12 +20,15 @@ function DesktopNav() {
   const pathname = usePathname();
 
   return (
-    <header className="hidden md:block sticky top-0 z-50 w-full bg-white/95 backdrop-blur border-b border-[#F0EDEB]">
-      <div className="max-w-4xl mx-auto flex h-14 items-center justify-between px-6">
-        <Link href="/dashboard" className="font-bold text-lg text-[#2E363B]">
-          RunCoach
+    <header className="hidden md:block sticky top-0 z-50 w-full bg-[#0B0E14]/85 backdrop-blur-2xl border-b border-white/10">
+      <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-8">
+        <Link href="/dashboard" className="flex items-center gap-2.5 font-black text-xl tracking-tight text-white italic">
+          <span className="flex items-center justify-center size-9 rounded-xl bg-[#FF4500] text-white font-black not-italic text-base athletic-glow-coral">
+            ⚡
+          </span>
+          <span>KADENCE<span className="text-[#FF4500]">.AI</span></span>
         </Link>
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-3">
           {tabs.filter((t: typeof tabs[number]) => !t.center).map((tab: typeof tabs[number]) => {
             const isActive =
               pathname === (tab.matchHref ?? tab.href) ||
@@ -35,23 +38,23 @@ function DesktopNav() {
                 key={tab.href}
                 href={tab.href}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all",
                   isActive
-                    ? "text-[#C15F3C] bg-[#FCEEE8]"
-                    : "text-[#6B7680] hover:text-[#2E363B] hover:bg-[#F5F2EF]"
+                    ? "text-white bg-[#FF5252]/15 border border-[#FF5252]/30 shadow-[0_0_15px_rgba(255,82,82,0.2)]"
+                    : "text-[#94A3B8] hover:text-white hover:bg-white/5"
                 )}
               >
-                <tab.icon className="size-4" />
+                <tab.icon className={cn("size-4", isActive ? "text-[#FF5252]" : "text-[#94A3B8]")} />
                 {tab.label}
               </Link>
             );
           })}
           <Link
             href="/run"
-            className="ml-2 h-9 px-5 rounded-full bg-[#C15F3C] text-white text-sm font-semibold flex items-center gap-1.5 hover:bg-[#9B4628] transition-colors"
+            className="ml-4 h-10 px-6 rounded-xl bg-[#FF5252] text-white text-xs font-black uppercase tracking-wider flex items-center gap-2 hover:bg-[#E03E3E] athletic-glow-coral transition-all active:scale-95 shadow-lg"
           >
-            <Play className="size-3.5 fill-current" />
-            Run
+            <Play className="size-4 fill-current" />
+            START RUN
           </Link>
         </nav>
       </div>
@@ -66,7 +69,7 @@ function MobileTabBar() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#F0EDEB]"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0F131C]/90 backdrop-blur-2xl border-t border-white/10"
       style={{ height: "80px", paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="flex items-center justify-around h-full max-w-md mx-auto px-2">
@@ -80,18 +83,20 @@ function MobileTabBar() {
               <Link
                 key={tab.href}
                 href={tab.href}
-                className="flex flex-col items-center justify-center relative"
-                style={{ marginTop: "-24px" }}
+                className="flex flex-col items-center justify-center relative group"
+                style={{ marginTop: "-26px" }}
               >
                 <span
-                  className="flex items-center justify-center rounded-full bg-[#C15F3C] text-white"
+                  className="flex items-center justify-center rounded-2xl bg-[#FF5252] text-white athletic-glow-coral animate-pulse-ring group-active:scale-95 transition-transform"
                   style={{
-                    width: "52px",
-                    height: "52px",
-                    boxShadow: "0 4px 14px rgba(193,95,60,0.4)",
+                    width: "56px",
+                    height: "56px",
                   }}
                 >
-                  <Play className="size-5 fill-white" />
+                  <Play className="size-6 fill-white ml-0.5" />
+                </span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#FF5252] mt-1">
+                  RUN
                 </span>
               </Link>
             );
@@ -105,14 +110,14 @@ function MobileTabBar() {
             >
               <tab.icon
                 className={cn(
-                  "size-5",
-                  isActive ? "text-[#C15F3C]" : "text-[#6B7680]"
+                  "size-5 transition-colors",
+                  isActive ? "text-[#FF5252]" : "text-[#94A3B8]"
                 )}
               />
               <span
                 className={cn(
-                  "text-[10px] font-semibold",
-                  isActive ? "text-[#C15F3C]" : "text-[#6B7680]"
+                  "text-[10px] font-extrabold uppercase tracking-wider",
+                  isActive ? "text-white" : "text-[#94A3B8]"
                 )}
               >
                 {tab.label}
@@ -129,9 +134,9 @@ function MobileTabBar() {
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#FDF8F4" }}>
+    <div className="min-h-screen flex flex-col bg-[#0B0E14] text-[#F8FAFC]">
       <DesktopNav />
-      <main className="flex-1 w-full max-w-2xl mx-auto px-4 pt-6 pb-6 md:pb-8 md:pt-8 pb-[100px] md:pb-8">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 pt-6 pb-[100px] md:pt-8 md:pb-12">
         {children}
       </main>
       <MobileTabBar />

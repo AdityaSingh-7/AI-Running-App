@@ -159,29 +159,30 @@ function ActiveRunInner() {
 
   return (
     <div
-      className="fixed inset-0 flex flex-col overflow-hidden"
-      style={{ backgroundColor: "#E8F0EC" }}
+      className="fixed inset-0 flex flex-col overflow-hidden bg-[#0B0E14] text-white"
     >
       {/* Top bar */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-2 shrink-0">
+      <div className="flex items-center justify-between px-5 pt-4 pb-2 shrink-0 border-b border-white/10 bg-[#0F131C]/85 backdrop-blur-2xl">
         <button
           onClick={() => router.back()}
-          className="size-10 rounded-full bg-white shadow-md flex items-center justify-center"
+          className="size-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-95"
           aria-label="Go back"
         >
-          <X className="size-5 text-[#2E363B]" />
+          <X className="size-5" />
         </button>
-        <span className="text-xs font-semibold uppercase tracking-widest text-[#6B7680]">
-          Tracking
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="size-2 rounded-full bg-[#FF5252] animate-ping" />
+          <span className="text-xs font-black uppercase tracking-widest text-[#94A3B8]">
+            LIVE TRACKING
+          </span>
+        </div>
         {/* Simulation badge */}
         {simulate ? (
           <div
-            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold"
-            style={{ backgroundColor: "#FEF0E6", color: "#C15F3C" }}
+            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wider bg-[#FF5252]/20 border border-[#FF5252]/40 text-[#FF5252]"
           >
-            <span className="inline-block size-1.5 rounded-full animate-pulse" style={{ backgroundColor: "#C15F3C" }} />
-            Sim
+            <span className="inline-block size-1.5 rounded-full bg-[#FF5252] animate-pulse" />
+            SIMULATED
           </div>
         ) : (
           <div className="size-10" aria-hidden />
@@ -189,16 +190,19 @@ function ActiveRunInner() {
       </div>
 
       {/* Map area */}
-      <div className="mx-4 rounded-2xl overflow-hidden shrink-0" style={{ height: 220, backgroundColor: "#B8CFC4" }}>
+      <div className="mx-4 mt-3 rounded-2xl overflow-hidden shrink-0 border border-white/10 shadow-2xl relative" style={{ height: 210, backgroundColor: "#141822" }}>
         <RunMap
           positions={mapPositions}
           isLive={status === "active" || status === "paused"}
           className="w-full h-full"
         />
+        <div className="absolute top-2 left-2 pointer-events-none bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 text-[10px] font-extrabold text-[#38BDF8] uppercase tracking-wider">
+          GPS Active
+        </div>
       </div>
 
       {/* VoiceCoach — sits below map */}
-      <div className="px-4 pt-2 shrink-0">
+      <div className="px-4 pt-3 shrink-0">
         <VoiceCoach
           personality={personality}
           isActive={status === "active"}
@@ -215,54 +219,48 @@ function ActiveRunInner() {
         />
       </div>
 
-      {/* Metrics section */}
-      <div className="flex-1 flex flex-col justify-center px-4 py-2">
-        {/* Timer */}
-        <div className="text-center mb-5">
+      {/* Apple Fitness+ Metrics section */}
+      <div className="flex-1 flex flex-col justify-center px-4 py-3">
+        {/* Main Elapsed Time Display */}
+        <div className="text-center mb-4">
           <p
-            className="tabular-nums leading-none"
+            className="tabular-nums font-mono leading-none tracking-tighter text-white font-black drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]"
             style={{
-              fontWeight: 900,
-              fontSize: 80,
-              color: "#2E363B",
-              letterSpacing: "-2px",
+              fontSize: 78,
             }}
           >
             {formatDuration(elapsedSeconds)}
           </p>
-          <p className="text-xs uppercase tracking-widest mt-1" style={{ color: "#6B7680" }}>
-            Elapsed Time
+          <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] mt-2">
+            Duration
           </p>
         </div>
 
-        {/* Stats grid */}
-        <div className="grid grid-cols-2 gap-3">
+        {/* 2-Column High-Contrast Stats */}
+        <div className="grid grid-cols-2 gap-3.5">
           {/* Distance */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <div className="glass-card rounded-2xl p-4 border border-white/10 text-center">
             <p
-              className="tabular-nums font-extrabold leading-tight"
-              style={{ fontSize: 28, color: "#C15F3C" }}
+              className="tabular-nums font-mono font-black leading-none text-[#FF5252]"
+              style={{ fontSize: 36 }}
             >
               {formatDistance(stats.distanceMeters, "km")}
             </p>
-            <p className="text-xs uppercase tracking-wide mt-1" style={{ color: "#6B7680" }}>
-              Distance
+            <p className="text-[10px] font-black uppercase tracking-widest text-[#94A3B8] mt-2">
+              Distance (KM)
             </p>
           </div>
 
           {/* Pace */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <div className="glass-card rounded-2xl p-4 border border-white/10 text-center">
             <p
-              className="tabular-nums font-extrabold leading-tight"
-              style={{ fontSize: 28, color: "#2E363B" }}
+              className="tabular-nums font-mono font-black leading-none text-[#38BDF8]"
+              style={{ fontSize: 36 }}
             >
               {formatPace(stats.currentPaceSecsPerKm)}
-              <span className="text-sm font-normal ml-1" style={{ color: "#6B7680" }}>
-                /km
-              </span>
             </p>
-            <p className="text-xs uppercase tracking-wide mt-1" style={{ color: "#6B7680" }}>
-              Pace
+            <p className="text-[10px] font-black uppercase tracking-widest text-[#94A3B8] mt-2">
+              Current Pace (/KM)
             </p>
           </div>
         </div>
@@ -273,11 +271,10 @@ function ActiveRunInner() {
         {status === "idle" && (
           <button
             onClick={handleStart}
-            className="w-full font-bold text-lg text-white rounded-full flex items-center justify-center gap-2 shadow-md transition-opacity hover:opacity-90"
-            style={{ height: 72, backgroundColor: "#C15F3C" }}
+            className="w-full h-16 rounded-2xl font-black text-xl uppercase tracking-wider text-white bg-[#FF5252] flex items-center justify-center gap-3 athletic-glow-coral transition-all active:scale-95 shadow-2xl"
           >
             <Play className="size-6 fill-current" />
-            Start Run
+            START RUN
           </button>
         )}
 
@@ -285,19 +282,17 @@ function ActiveRunInner() {
           <div className="flex gap-3 items-center">
             <button
               onClick={handlePause}
-              className="flex-1 font-bold text-base rounded-full border flex items-center justify-center gap-2 transition-colors"
-              style={{ height: 56, borderWidth: 1.5, borderColor: "#2E363B", color: "#2E363B", backgroundColor: "transparent" }}
+              className="flex-1 h-15 font-black text-base uppercase tracking-wider rounded-2xl border-2 border-white/20 bg-white/10 text-white flex items-center justify-center gap-2 transition-all active:scale-95"
             >
               <Pause className="size-5 fill-current" />
-              Pause
+              PAUSE
             </button>
             <button
               onClick={handleStop}
-              className="shrink-0 rounded-full flex items-center justify-center shadow-md transition-opacity hover:opacity-90"
-              style={{ width: 56, height: 56, backgroundColor: "#C15F3C" }}
+              className="size-15 rounded-2xl bg-[#EF4444] text-white flex items-center justify-center shadow-2xl transition-all active:scale-95 shrink-0"
               aria-label="Stop run"
             >
-              <Square className="size-5 fill-white text-white" />
+              <Square className="size-6 fill-white" />
             </button>
           </div>
         )}
@@ -306,29 +301,27 @@ function ActiveRunInner() {
           <div className="flex gap-3 items-center">
             <button
               onClick={handleResume}
-              className="flex-1 font-bold text-base rounded-full border flex items-center justify-center gap-2 transition-colors"
-              style={{ height: 56, borderWidth: 1.5, borderColor: "#2E363B", color: "#2E363B", backgroundColor: "transparent" }}
+              className="flex-1 h-15 font-black text-base uppercase tracking-wider rounded-2xl bg-[#FF5252] text-white flex items-center justify-center gap-2 athletic-glow-coral transition-all active:scale-95"
             >
               <Play className="size-5 fill-current" />
-              Resume
+              RESUME
             </button>
             <button
               onClick={handleStop}
-              className="shrink-0 rounded-full flex items-center justify-center shadow-md transition-opacity hover:opacity-90"
-              style={{ width: 56, height: 56, backgroundColor: "#C15F3C" }}
+              className="size-15 rounded-2xl bg-[#EF4444] text-white flex items-center justify-center shadow-2xl transition-all active:scale-95 shrink-0"
               aria-label="Finish run"
             >
-              <Square className="size-5 fill-white text-white" />
+              <Square className="size-6 fill-white" />
             </button>
           </div>
         )}
 
         {status === "completed" && (
-          <div className="text-center py-3">
-            <p className="font-bold text-[#2E363B] text-lg mb-1">Run Complete</p>
-            <p className="text-sm text-[#6B7680]">
+          <div className="text-center py-4 glass-card rounded-2xl border border-[#38BDF8]/40">
+            <p className="font-black text-[#38BDF8] text-xl uppercase tracking-wider mb-1">RUN COMPLETED 🎉</p>
+            <p className="text-sm font-bold text-white">
               {formatDuration(elapsedSeconds)} &middot;{" "}
-              <span className="font-bold" style={{ color: "#C15F3C" }}>
+              <span className="font-mono text-[#FF5252]">
                 {formatDistance(stats.distanceMeters, "km")}
               </span>
             </p>
@@ -344,10 +337,9 @@ export default function ActiveRunPage() {
     <Suspense
       fallback={
         <div
-          className="fixed inset-0 flex items-center justify-center"
-          style={{ backgroundColor: "#E8F0EC" }}
+          className="fixed inset-0 flex items-center justify-center bg-[#0B0E14]"
         >
-          <p className="text-[#6B7680] text-sm">Loading…</p>
+          <p className="text-[#94A3B8] text-xs font-black uppercase tracking-widest animate-pulse">Loading Run Engine…</p>
         </div>
       }
     >

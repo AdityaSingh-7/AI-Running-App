@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "RunCoach AI",
-    short_name: "RunCoach",
-    description: "AI-powered running coach with real-time voice feedback",
+    name: "KADENCE AI — Athletic Telemetry",
+    short_name: "KADENCE",
+    description: "Precision running telemetry & AI real-time voice coaching",
     start_url: "/dashboard",
     display: "standalone",
     background_color: "#000000",

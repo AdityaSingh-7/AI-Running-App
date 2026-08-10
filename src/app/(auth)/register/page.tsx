@@ -28,36 +28,29 @@ async function registerAction(formData: FormData) {
 export default function RegisterPage() {
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 py-12"
-      style={{ background: "#FDF8F4" }}
+      className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#0B0E14] text-[#F8FAFC]"
     >
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <span className="font-bold text-xl" style={{ color: "#2E363B" }}>
-              RunCoach
+          <Link href="/" className="inline-flex items-center gap-2.5 font-black text-2xl tracking-tight italic text-white">
+            <span className="flex items-center justify-center size-9 rounded-xl bg-[#FF4500] text-white font-black not-italic text-base athletic-glow-coral">
+              ⚡
             </span>
+            <span>KADENCE<span className="text-[#FF4500]">.AI</span></span>
           </Link>
-          <p className="text-sm mt-1" style={{ color: "#6B7680" }}>
-            Your journey starts here
+          <p className="text-xs font-extrabold uppercase tracking-widest text-[#94A3B8] mt-2">
+            Your athletic journey starts here
           </p>
         </div>
 
-        <div
-          className="rounded-2xl p-8"
-          style={{
-            background: "#FFFFFF",
-            boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
-            border: "1px solid #F0EDEB",
-          }}
-        >
+        <div className="rounded-2xl glass-card p-8 border border-white/10 shadow-2xl">
           <div className="mb-6">
-            <h1 className="font-bold text-xl" style={{ color: "#2E363B" }}>
-              Create account
+            <h1 className="font-black text-2xl uppercase tracking-tight text-white italic">
+              CREATE ACCOUNT
             </h1>
-            <p className="text-sm mt-1" style={{ color: "#6B7680" }}>
-              Start your AI-powered training journey today
+            <p className="text-xs font-semibold text-[#94A3B8] mt-1">
+              Start your AI voice-coached training journey today
             </p>
           </div>
 
@@ -65,8 +58,7 @@ export default function RegisterPage() {
             <div className="flex flex-col gap-1.5">
               <Label
                 htmlFor="name"
-                className="text-xs font-semibold"
-                style={{ color: "#2E363B" }}
+                className="text-xs font-black uppercase tracking-wider text-[#94A3B8]"
               >
                 Full Name
               </Label>
@@ -77,44 +69,32 @@ export default function RegisterPage() {
                 placeholder="Alex Johnson"
                 required
                 autoComplete="name"
-                className="h-11 rounded-xl text-sm"
-                style={{
-                  border: "1.5px solid #F0EDEB",
-                  background: "#F5F2EF",
-                  color: "#2E363B",
-                }}
+                className="h-12 rounded-xl text-xs bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[#FF5252]"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
               <Label
                 htmlFor="email"
-                className="text-xs font-semibold"
-                style={{ color: "#2E363B" }}
+                className="text-xs font-black uppercase tracking-wider text-[#94A3B8]"
               >
-                Email
+                Email Address
               </Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="runner@example.com"
                 required
                 autoComplete="email"
-                className="h-11 rounded-xl text-sm"
-                style={{
-                  border: "1.5px solid #F0EDEB",
-                  background: "#F5F2EF",
-                  color: "#2E363B",
-                }}
+                className="h-12 rounded-xl text-xs bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[#FF5252]"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
               <Label
                 htmlFor="password"
-                className="text-xs font-semibold"
-                style={{ color: "#2E363B" }}
+                className="text-xs font-black uppercase tracking-wider text-[#94A3B8]"
               >
                 Password
               </Label>
@@ -126,20 +106,14 @@ export default function RegisterPage() {
                 required
                 autoComplete="new-password"
                 minLength={8}
-                className="h-11 rounded-xl text-sm"
-                style={{
-                  border: "1.5px solid #F0EDEB",
-                  background: "#F5F2EF",
-                  color: "#2E363B",
-                }}
+                className="h-12 rounded-xl text-xs bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[#FF5252]"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
               <Label
                 htmlFor="confirmPassword"
-                className="text-xs font-semibold"
-                style={{ color: "#2E363B" }}
+                className="text-xs font-black uppercase tracking-wider text-[#94A3B8]"
               >
                 Confirm Password
               </Label>
@@ -150,44 +124,36 @@ export default function RegisterPage() {
                 placeholder="••••••••"
                 required
                 autoComplete="new-password"
-                className="h-11 rounded-xl text-sm"
-                style={{
-                  border: "1.5px solid #F0EDEB",
-                  background: "#F5F2EF",
-                  color: "#2E363B",
-                }}
+                className="h-12 rounded-xl text-xs bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[#FF5252]"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full h-12 font-semibold text-white text-sm transition-colors mt-1 rounded-full"
-              style={{ background: "#C15F3C" }}
+              className="w-full h-13 font-black text-xs uppercase tracking-wider text-white transition-all mt-2 rounded-xl bg-[#FF5252] hover:bg-[#E03E3E] athletic-glow-coral active:scale-95 shadow-xl"
             >
-              Create Account
+              CREATE ACCOUNT
             </button>
 
-            <p className="text-xs text-center" style={{ color: "#6B7680" }}>
-              By creating an account you agree to our{" "}
+            <p className="text-[11px] text-center text-[#94A3B8]">
+              By registering, you agree to our{" "}
               <Link
                 href="/terms"
-                className="font-medium hover:underline"
-                style={{ color: "#C15F3C" }}
+                className="font-extrabold text-[#FF5252] hover:underline uppercase"
               >
-                Terms of Service
+                Terms
               </Link>
               .
             </p>
           </form>
 
-          <div className="mt-6 text-center text-sm" style={{ color: "#6B7680" }}>
+          <div className="mt-6 text-center text-xs font-semibold text-[#94A3B8]">
             Already have an account?&nbsp;
             <Link
               href="/login"
-              className="font-semibold hover:underline"
-              style={{ color: "#C15F3C" }}
+              className="font-extrabold text-[#FF5252] hover:underline uppercase tracking-wider"
             >
-              Sign in
+              Sign In
             </Link>
           </div>
         </div>

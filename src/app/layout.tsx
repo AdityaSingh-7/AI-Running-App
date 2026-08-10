@@ -1,23 +1,29 @@
 import type { Metadata, Viewport } from "next";
 import type React from "react";
-import { Inter } from "next/font/google";
+import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { PWARegister } from "@/components/PWARegister";
 
-const inter = Inter({
+const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-sans",
+  variable: "--font-outfit",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
-  title: "RunCoach AI",
-  description: "AI-powered running coach with real-time voice feedback",
+  title: "KADENCE AI — Athletic Telemetry & Real-Time Voice Coach",
+  description: "Precision running telemetry & AI-powered real-time voice coaching",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "RunCoach",
+    title: "KADENCE",
   },
 };
 
@@ -34,8 +40,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="min-h-screen flex flex-col">
+    <html lang="en" className={`${outfit.variable} ${jetbrainsMono.variable} font-sans h-full antialiased`} suppressHydrationWarning>
+      <body className="min-h-screen flex flex-col font-sans">
         <ThemeProvider>
           <PWARegister />
           {children}
