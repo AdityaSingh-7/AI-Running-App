@@ -3,9 +3,18 @@ import { redirect } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+function isNextRedirect(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const err = error as { digest?: string; message?: string };
+  return (
+    (typeof err.digest === "string" && err.digest.includes("NEXT_REDIRECT")) ||
+    (typeof err.message === "string" && err.message.includes("NEXT_REDIRECT"))
+  );
+}
+
 async function signInAction(formData: FormData) {
   "use server";
-  const email = formData.get("email") as string;
+  const email = (formData.get("email") as string)?.trim().toLowerCase();
   const password = formData.get("password") as string;
 
   if (!email || !password) return;
@@ -14,9 +23,10 @@ async function signInAction(formData: FormData) {
     const { signIn } = await import("@/lib/auth");
     await signIn("credentials", { email, password, redirectTo: "/dashboard" });
   } catch (error) {
-    if (error instanceof Error && (error.message.includes("NEXT_REDIRECT") || error.message.includes("redirect"))) {
+    if (isNextRedirect(error)) {
       throw error;
     }
+    console.error("SignIn error:", error);
     redirect("/login?error=InvalidCredentials");
   }
 }
@@ -27,7 +37,7 @@ async function signInWithGitHub() {
     const { signIn } = await import("@/lib/auth");
     await signIn("github", { redirectTo: "/dashboard" });
   } catch (error) {
-    if (error instanceof Error && (error.message.includes("NEXT_REDIRECT") || error.message.includes("redirect"))) {
+    if (isNextRedirect(error)) {
       throw error;
     }
     redirect("/login?error=OAuthFailed");
