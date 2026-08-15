@@ -10,17 +10,39 @@ async function signInAction(formData: FormData) {
 
   if (!email || !password) return;
 
-  const { signIn } = await import("@/lib/auth");
-  await signIn("credentials", { email, password, redirectTo: "/dashboard" });
+  try {
+    const { signIn } = await import("@/lib/auth");
+    await signIn("credentials", { email, password, redirectTo: "/dashboard" });
+  } catch (error) {
+    if (error instanceof Error && (error.message.includes("NEXT_REDIRECT") || error.message.includes("redirect"))) {
+      throw error;
+    }
+    redirect("/login?error=InvalidCredentials");
+  }
 }
 
 async function signInWithGitHub() {
   "use server";
-  const { signIn } = await import("@/lib/auth");
-  await signIn("github", { redirectTo: "/dashboard" });
+  try {
+    const { signIn } = await import("@/lib/auth");
+    await signIn("github", { redirectTo: "/dashboard" });
+  } catch (error) {
+    if (error instanceof Error && (error.message.includes("NEXT_REDIRECT") || error.message.includes("redirect"))) {
+      throw error;
+    }
+    redirect("/login?error=OAuthFailed");
+  }
 }
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string; registered?: string }>;
+}) {
+  const params = await searchParams;
+  const hasError = params?.error;
+  const registered = params?.registered === "true";
+
   return (
     <div
       className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#0B0E14] text-[#F8FAFC]"
@@ -48,6 +70,22 @@ export default function LoginPage() {
               Enter your runner credentials to continue
             </p>
           </div>
+
+          {registered && (
+            <div className="mb-4 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
+              Account created successfully! Please sign in with your credentials.
+            </div>
+          )}
+
+          {hasError && (
+            <div className="mb-4 p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold">
+              {hasError === "InvalidCredentials"
+                ? "Invalid email or password. Please check and try again."
+                : hasError === "OAuthFailed"
+                ? "GitHub sign-in failed. Please try credentials or try again."
+                : "Authentication failed. Please check your credentials."}
+            </div>
+          )}
 
           <div className="flex flex-col gap-4">
             {/* GitHub OAuth */}

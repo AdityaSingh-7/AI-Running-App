@@ -5,14 +5,21 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { PrismaPg } = require("@prisma/adapter-pg");
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
-    throw new Error("DATABASE_URL is not set");
+    return new PrismaClient();
   }
-  const adapter = new PrismaPg({ connectionString });
-  return new PrismaClient({ adapter });
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { Pool } = require("pg");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { PrismaPg } = require("@prisma/adapter-pg");
+    const pool = new Pool({ connectionString });
+    const adapter = new PrismaPg(pool);
+    return new PrismaClient({ adapter });
+  } catch {
+    return new PrismaClient();
+  }
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
@@ -20,3 +27,5 @@ export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
+
+

@@ -13,19 +13,42 @@ async function registerAction(formData: FormData) {
   const confirmPassword = formData.get("confirmPassword") as string;
 
   if (!name || !email || !password || !confirmPassword) return;
-  if (password !== confirmPassword) return;
+  if (password !== confirmPassword) {
+    redirect("/register?error=PasswordMismatch");
+  }
 
-  const hashedPassword = await bcrypt.hash(password, 12);
+  try {
+    const { prisma } = await import("@/lib/prisma");
+    const existing = await prisma.user.findUnique({
+      where: { email },
+    });
 
-  const { prisma } = await import("@/lib/prisma");
-  await prisma.user.create({
-    data: { name, email, passwordHash: hashedPassword },
-  });
+    if (existing) {
+      redirect("/register?error=UserExists");
+    }
 
-  redirect("/login");
+    const hashedPassword = await bcrypt.hash(password, 12);
+    await prisma.user.create({
+      data: { name, email, passwordHash: hashedPassword },
+    });
+  } catch (error) {
+    if (error instanceof Error && (error.message.includes("NEXT_REDIRECT") || error.message.includes("redirect"))) {
+      throw error;
+    }
+    redirect("/register?error=ServerError");
+  }
+
+  redirect("/login?registered=true");
 }
 
-export default function RegisterPage() {
+export default async function RegisterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const params = await searchParams;
+  const hasError = params?.error;
+
   return (
     <div
       className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#0B0E14] text-[#F8FAFC]"
@@ -53,6 +76,16 @@ export default function RegisterPage() {
               Start your AI voice-coached training journey today
             </p>
           </div>
+
+          {hasError && (
+            <div className="mb-4 p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold">
+              {hasError === "PasswordMismatch"
+                ? "Passwords do not match. Please try again."
+                : hasError === "UserExists"
+                ? "An account with this email already exists. Please Sign In."
+                : "Unable to create account. Please check your database connection or try again."}
+            </div>
+          )}
 
           <form action={registerAction} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">

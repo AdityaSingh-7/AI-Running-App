@@ -17,10 +17,16 @@ export function proxy(request: NextRequest) {
   );
 
   if (isProtected) {
-    // Check for NextAuth session token
+    // Check for NextAuth / Auth.js session token variations
     const token =
       request.cookies.get("authjs.session-token") ??
-      request.cookies.get("__Secure-authjs.session-token");
+      request.cookies.get("__Secure-authjs.session-token") ??
+      request.cookies.get("next-auth.session-token") ??
+      request.cookies.get("__Secure-next-auth.session-token") ??
+      request.cookies.get("authjs.session-token.0") ??
+      request.cookies.get("__Secure-authjs.session-token.0") ??
+      request.cookies.get("next-auth.session-token.0") ??
+      request.cookies.get("__Secure-next-auth.session-token.0");
 
     if (!token) {
       const loginUrl = new URL("/login", request.url);
